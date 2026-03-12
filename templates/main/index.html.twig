@@ -1,23 +1,127 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Acceuil{% endblock %}
+
 {% block body %}
-    <h1>Tests</h1>
 
-    <h2>Liste des Propriétaires</h2>
-    <ul>
-    {% for p in proprietaires %}
-        <li>{{ p.prenom }} {{ p.nom }} (Tél: {{ p.telephone }})</li>
-    {% else %}
-        <li>Aucun propriétaire en base.</li>
-    {% endfor %}
-    </ul>
+<section>
+    <img src="{{ asset('img/index-chien.jpeg') }}" class="image-accueil" alt="Chien qui gambade">
+</section>
 
-    <h2>Liste des Chiens</h2>
-    <ul>
-    {% for c in chiens %}
-        <li>{{ c.nom }} - {{ c.race }}</li>
-    {% else %}
-        <li>Aucun chien trouvé.</li>
-    {% endfor %}
-    </ul>
+<section class="container my-5">
+
+    <div class="row g-4">
+
+        <!-- Carte 1 -->
+        <div class="col-md-4">
+            <div class="card carte-canis p-4 h-100">
+
+                <h2 class="titre-carte mb-3">Cours individuels</h2>
+
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <p class="texte-carte">
+                            Education personnalisée : 1 chien par séance. Objectif sur mesure.
+                        </p>
+                    </div>
+
+                    <div>
+                        <img src="{{ asset('img/chienTropCool.jpeg') }}" class="img-carte" alt="Education chien">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Carte 2 -->
+        <div class="col-md-4">
+            <div class="card carte-canis p-4 h-100">
+
+                <h2 class="titre-carte mb-3">Activités</h2>
+
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <p class="texte-carte">
+                            Des activités sont proposées pour permettre aux chiens
+                            de se dépenser tout en développant leur socialisation
+                            avec d'autres animaux.
+                        </p>
+                    </div>
+
+                    <div>
+                        <img src="{{ asset('img/chien-activite.jpg') }}" class="img-carte" alt="Activité chien">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Carte 3 -->
+        <div class="col-md-4">
+            <div class="card carte-canis p-4 h-100">
+
+                <h2 class="titre-carte mb-3">Conseils</h2>
+
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <p class="texte-carte">
+                            Nous accompagnons les maîtres avec des conseils
+                            personnalisés pour améliorer la compréhension
+                            et le comportement du chien.
+                        </p>
+                    </div>
+
+                    <div>
+                        <img src="{{ asset('img/conseil-chien.jpg') }}" class="img-carte" alt="Conseil chien">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<style>
+
+.image-accueil{
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Cartes */
+
+.carte-canis{
+    background-color: #ff5400;
+    border-radius: 15px;
+    border: none;
+}
+
+/* Titre */
+
+.titre-carte{
+    color: #1b1b1b;
+    font-size: 32px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Texte */
+
+.texte-carte{
+    color: #ffffff;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+}
+
+/* Image */
+
+.img-carte{
+    width: 90px;
+    border-radius: 10px;
+}
+
+</style>
+
 {% endblock %}
