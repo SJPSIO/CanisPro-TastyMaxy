@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Tests</h1>
+
+    <h2>Liste des Propriétaires</h2>
+    <ul>
+    {% for p in proprietaires %}
+        <li>{{ p.prenom }} {{ p.nom }} (Tél: {{ p.telephone }})</li>
+    {% else %}
+        <li>Aucun propriétaire en base.</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Liste des Chiens</h2>
+    <ul>
+    {% for c in chiens %}
+        <li>{{ c.nom }} - {{ c.race }}</li>
+    {% else %}
+        <li>Aucun chien trouvé.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
