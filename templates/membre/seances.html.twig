@@ -1,0 +1,65 @@
+{% extends 'membre/base_membre.html.twig' %}
+
+{% block title %}Séances disponibles – CanisPro{% endblock %}
+
+{% block membre_body %}
+
+<div class="mb-4">
+    <h2 style="font-family:'Montserrat',sans-serif;font-weight:800">Séances disponibles</h2>
+    <p class="text-muted">Inscrivez un de vos chiens à une séance</p>
+</div>
+
+{% if seances is empty %}
+<div class="card card-canis text-center p-5">
+    <i class="fa-solid fa-calendar-xmark fa-3x text-muted mb-3"></i>
+    <p class="text-muted mb-0">Aucune séance disponible pour le moment.</p>
+</div>
+{% else %}
+<div class="row g-4">
+    {% for seance in seances %}
+    <div class="col-md-6 col-xl-4">
+        <div class="card card-canis h-100">
+            <div style="height:5px;background:{% if seance.places == 0 %}#dc3545{% elseif seance.places <= 3 %}#ffc107{% else %}var(--orange){% endif %}"></div>
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;margin:0">{{ seance.cours }}</h5>
+                    <span class="badge rounded-pill" style="background:var(--dark);color:#fff;font-size:.72rem">{{ seance.type }}</span>
+                </div>
+                <div class="text-muted mb-3" style="font-size:.88rem">
+                    <div><i class="fa-regular fa-calendar me-2"></i>{{ seance.date|date('d/m/Y') }} à {{ seance.heure }}</div>
+                    <div><i class="fa-solid fa-location-dot me-2"></i>{{ seance.lieu }}</div>
+                    <div class="mt-1">
+                        {% if seance.places == 0 %}
+                            <span class="badge bg-danger">Complet</span>
+                        {% elseif seance.places <= 3 %}
+                            <span class="badge bg-warning text-dark">{{ seance.places }} place{% if seance.places > 1 %}s{% endif %} restante{% if seance.places > 1 %}s{% endif %}</span>
+                        {% else %}
+                            <span class="badge bg-success">{{ seance.places }} / {{ seance.max }} places</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if seance.places > 0 %}
+                <form>
+                    <div class="mb-2">
+                        <select class="form-select form-select-sm">
+                            <option value="">Choisir un chien…</option>
+                            {% for chien in chiens %}
+                            <option value="{{ chien.id }}">{{ chien.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-canispro btn-sm w-100">
+                        <i class="fa-solid fa-calendar-plus me-1"></i>S'inscrire
+                    </button>
+                </form>
+                {% else %}
+                <button class="btn btn-secondary btn-sm w-100" disabled>Séance complète</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

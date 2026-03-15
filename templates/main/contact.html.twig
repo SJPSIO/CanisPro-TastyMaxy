@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}À propos – CanisPro{% endblock %}
+
+{% block body %}
+
+{# ===== EN-TÊTE ===== #}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fa-solid fa-paw me-3" style="color:var(--orange)"></i>À propos de CanisPro</h1>
+        <p>Un centre professionnel dédié à l'éducation canine bienveillante</p>
+    </div>
+</div>
+
+{# ===== PRÉSENTATION ===== #}
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+                <div class="accent-line"></div>
+                <h2 class="section-title">Notre mission</h2>
+                <p class="text-muted lh-lg">
+                    CanisPro Éducation accompagne les propriétaires de chiens depuis plus de 10 ans avec une approche éducative moderne, fondée sur le respect et la compréhension de l'animal.
+                </p>
+                <p class="text-muted lh-lg">
+                    Nous croyons que l'éducation canine ne se limite pas au dressage : elle vise à développer une relation équilibrée entre le maître et son chien, fondée sur la communication, la confiance et le bien-être de l'animal.
+                </p>
+                <div class="row g-3 mt-2">
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-check-circle" style="color:var(--orange)"></i>
+                            <span style="font-size:.9rem;font-weight:500">Éducateurs certifiés</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-check-circle" style="color:var(--orange)"></i>
+                            <span style="font-size:.9rem;font-weight:500">Méthodes positives</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-check-circle" style="color:var(--orange)"></i>
+                            <span style="font-size:.9rem;font-weight:500">Petits groupes</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-check-circle" style="color:var(--orange)"></i>
+                            <span style="font-size:.9rem;font-weight:500">Suivi personnalisé</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card card-canis p-4" style="background:var(--orange-pale)">
+                    <div class="row g-4 text-center">
+                        <div class="col-6">
+                            <div style="font-family:'Montserrat',sans-serif;font-size:2.5rem;font-weight:800;color:var(--orange)">10+</div>
+                            <div class="text-muted">Années d'expérience</div>
+                        </div>
+                        <div class="col-6">
+                            <div style="font-family:'Montserrat',sans-serif;font-size:2.5rem;font-weight:800;color:var(--orange)">500+</div>
+                            <div class="text-muted">Chiens formés</div>
+                        </div>
+                        <div class="col-6">
+                            <div style="font-family:'Montserrat',sans-serif;font-size:2.5rem;font-weight:800;color:var(--orange)">6</div>
+                            <div class="text-muted">Types de cours</div>
+                        </div>
+                        <div class="col-6">
+                            <div style="font-family:'Montserrat',sans-serif;font-size:2.5rem;font-weight:800;color:var(--orange)">98%</div>
+                            <div class="text-muted">Satisfaction</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ===== CONTACT ===== #}
+<section style="background:var(--grey-light);padding:60px 0">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="accent-line mx-auto"></div>
+            <h2 class="section-title">Nous trouver</h2>
+            <p class="section-subtitle">Venez nous rendre visite ou contactez-nous</p>
+        </div>
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="card card-canis text-center p-4 h-100">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3 mx-auto"
+                         style="width:60px;height:60px;background:var(--orange-pale)">
+                        <i class="fa-solid fa-location-dot fa-xl" style="color:var(--orange)"></i>
+                    </div>
+                    <h5 style="font-family:'Montserrat',sans-serif">Adresse</h5>
+                    <p class="text-muted mb-0">12 Rue des Chiens<br>64000 Pau, France</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-canis text-center p-4 h-100">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3 mx-auto"
+                         style="width:60px;height:60px;background:var(--orange-pale)">
+                        <i class="fa-solid fa-phone fa-xl" style="color:var(--orange)"></i>
+                    </div>
+                    <h5 style="font-family:'Montserrat',sans-serif">Téléphone</h5>
+                    <p class="text-muted mb-0">04 78 12 34 56</p>
+                    <p class="text-muted">Lun – Sam : 9h – 18h</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-canis text-center p-4 h-100">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3 mx-auto"
+                         style="width:60px;height:60px;background:var(--orange-pale)">
+                        <i class="fa-solid fa-envelope fa-xl" style="color:var(--orange)"></i>
+                    </div>
+                    <h5 style="font-family:'Montserrat',sans-serif">Email</h5>
+                    <p class="text-muted mb-0">contact@canispro.fr</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

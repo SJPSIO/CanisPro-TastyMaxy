@@ -1,127 +1,134 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Acceuil{% endblock %}
+{% block title %}Accueil – CanisPro Éducation{% endblock %}
 
 {% block body %}
 
-<section>
-    <img src="{{ asset('img/index-chien.jpeg') }}" class="image-accueil" alt="Chien qui gambade">
-</section>
-
-<section class="container my-5">
-
-    <div class="row g-4">
-
-        <!-- Carte 1 -->
-        <div class="col-md-4">
-            <div class="card carte-canis p-4 h-100">
-
-                <h2 class="titre-carte mb-3">Cours individuels</h2>
-
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <p class="texte-carte">
-                            Education personnalisée : 1 chien par séance. Objectif sur mesure.
-                        </p>
-                    </div>
-
-                    <div>
-                        <img src="{{ asset('img/chienTropCool.jpeg') }}" class="img-carte" alt="Education chien">
-                    </div>
+{# ===== HERO ===== #}
+<section class="hero-section">
+    <div class="container position-relative" style="z-index:2">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <p class="text-uppercase fw-bold mb-3" style="color:var(--orange);letter-spacing:2px;font-size:.85rem">
+                    <i class="fa-solid fa-paw me-2"></i>Centre d'éducation canine professionnel
+                </p>
+                <h1 class="hero-title">
+                    Éduquez votre chien<br>avec <span>expertise</span><br>et bienveillance
+                </h1>
+                <p class="hero-subtitle">
+                    CanisPro Éducation propose des cours individuels et collectifs adaptés à tous les niveaux, pour créer une relation équilibrée entre vous et votre compagnon.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{{ path('app_cours_index') }}" class="btn btn-canispro btn-lg">
+                        <i class="fa-solid fa-graduation-cap me-2"></i>Découvrir nos cours
+                    </a>
+                    <a href="{{ path('app_contact') }}" class="btn btn-outline-canispro btn-lg" style="border-color:rgba(255,255,255,.4);color:#fff">
+                        <i class="fa-solid fa-circle-info me-2"></i>En savoir plus
+                    </a>
                 </div>
-
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="{{ asset('img/index-chien.jpeg') }}" alt="Chien éducation" class="hero-img">
             </div>
         </div>
-
-        <!-- Carte 2 -->
-        <div class="col-md-4">
-            <div class="card carte-canis p-4 h-100">
-
-                <h2 class="titre-carte mb-3">Activités</h2>
-
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <p class="texte-carte">
-                            Des activités sont proposées pour permettre aux chiens
-                            de se dépenser tout en développant leur socialisation
-                            avec d'autres animaux.
-                        </p>
-                    </div>
-
-                    <div>
-                        <img src="{{ asset('img/chien-activite.jpg') }}" class="img-carte" alt="Activité chien">
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Carte 3 -->
-        <div class="col-md-4">
-            <div class="card carte-canis p-4 h-100">
-
-                <h2 class="titre-carte mb-3">Conseils</h2>
-
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <p class="texte-carte">
-                            Nous accompagnons les maîtres avec des conseils
-                            personnalisés pour améliorer la compréhension
-                            et le comportement du chien.
-                        </p>
-                    </div>
-
-                    <div>
-                        <img src="{{ asset('img/conseil-chien.jpg') }}" class="img-carte" alt="Conseil chien">
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
     </div>
-
 </section>
 
-<style>
+{# ===== CHIFFRES CLÉS ===== #}
+<section style="background:var(--orange);padding:32px 0">
+    <div class="container">
+        <div class="row text-center text-white g-3">
+            <div class="col-6 col-md-3">
+                <div class="display-5 fw-bold font-montserrat">10+</div>
+                <div style="opacity:.85;font-size:.9rem">Années d'expérience</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="display-5 fw-bold font-montserrat">500+</div>
+                <div style="opacity:.85;font-size:.9rem">Chiens éduqués</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="display-5 fw-bold font-montserrat">6</div>
+                <div style="opacity:.85;font-size:.9rem">Types de cours</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="display-5 fw-bold font-montserrat">98%</div>
+                <div style="opacity:.85;font-size:.9rem">Clients satisfaits</div>
+            </div>
+        </div>
+    </div>
+</section>
 
-.image-accueil{
-    width: 100%;
-    height: auto;
-    display: block;
-}
+{# ===== SERVICES ===== #}
+<section class="py-5 my-3">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="accent-line mx-auto"></div>
+            <h2 class="section-title">Nos services</h2>
+            <p class="section-subtitle">Des cours adaptés à chaque étape de la vie de votre chien</p>
+        </div>
+        <div class="row g-4">
 
-/* Cartes */
+            <div class="col-md-4">
+                <div class="card card-canis h-100">
+                    <div style="height:6px;background:linear-gradient(90deg,#ff5400,#ff8533)"></div>
+                    <div class="card-body p-4">
+                        <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;background:var(--orange-pale)">
+                            <i class="fa-solid fa-user fa-xl" style="color:var(--orange)"></i>
+                        </div>
+                        <h3 style="font-size:1.2rem;font-family:'Montserrat',sans-serif;font-weight:700">Cours individuels</h3>
+                        <p class="text-muted" style="font-size:.92rem">Séances personnalisées 1-à-1 avec un éducateur certifié. Programme sur mesure adapté aux besoins de votre chien.</p>
+                        <a href="{{ path('app_cours_index') }}" class="btn btn-outline-canispro btn-sm mt-2">Voir les cours</a>
+                    </div>
+                </div>
+            </div>
 
-.carte-canis{
-    background-color: #ff5400;
-    border-radius: 15px;
-    border: none;
-}
+            <div class="col-md-4">
+                <div class="card card-canis h-100">
+                    <div style="height:6px;background:linear-gradient(90deg,#ff5400,#ff8533)"></div>
+                    <div class="card-body p-4">
+                        <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;background:var(--orange-pale)">
+                            <i class="fa-solid fa-users fa-xl" style="color:var(--orange)"></i>
+                        </div>
+                        <h3 style="font-size:1.2rem;font-family:'Montserrat',sans-serif;font-weight:700">Cours collectifs</h3>
+                        <p class="text-muted" style="font-size:.92rem">Sociabilisation, obéissance, agility... Des cours en groupe pour progresser dans un environnement stimulant.</p>
+                        <a href="{{ path('app_cours_index') }}" class="btn btn-outline-canispro btn-sm mt-2">Voir les cours</a>
+                    </div>
+                </div>
+            </div>
 
-/* Titre */
+            <div class="col-md-4">
+                <div class="card card-canis h-100">
+                    <div style="height:6px;background:linear-gradient(90deg,#ff5400,#ff8533)"></div>
+                    <div class="card-body p-4">
+                        <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;background:var(--orange-pale)">
+                            <i class="fa-solid fa-comments fa-xl" style="color:var(--orange)"></i>
+                        </div>
+                        <h3 style="font-size:1.2rem;font-family:'Montserrat',sans-serif;font-weight:700">Conseils personnalisés</h3>
+                        <p class="text-muted" style="font-size:.92rem">Nos éducateurs vous accompagnent avec des conseils adaptés pour mieux comprendre votre animal au quotidien.</p>
+                        <a href="{{ path('app_contact') }}" class="btn btn-outline-canispro btn-sm mt-2">Nous contacter</a>
+                    </div>
+                </div>
+            </div>
 
-.titre-carte{
-    color: #1b1b1b;
-    font-size: 32px;
-    font-family: 'Montserrat', sans-serif;
-}
+        </div>
+    </div>
+</section>
 
-/* Texte */
-
-.texte-carte{
-    color: #ffffff;
-    font-size: 16px;
-    font-family: Arial, sans-serif;
-}
-
-/* Image */
-
-.img-carte{
-    width: 90px;
-    border-radius: 10px;
-}
-
-</style>
+{# ===== CTA CONNEXION ===== #}
+<section style="background:linear-gradient(135deg,var(--dark),var(--dark2));padding:64px 0">
+    <div class="container text-center text-white">
+        <i class="fa-solid fa-paw fa-2x mb-4" style="color:var(--orange)"></i>
+        <h2 style="font-family:'Montserrat',sans-serif;font-size:2rem;font-weight:800">Prêt à commencer l'aventure ?</h2>
+        <p style="color:rgba(255,255,255,.7);max-width:560px;margin:16px auto 32px">Créez votre espace membre, ajoutez vos chiens et inscrivez-les aux séances de votre choix en quelques clics.</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{{ path('app_register') }}" class="btn btn-canispro btn-lg">
+                <i class="fa-solid fa-user-plus me-2"></i>Créer un compte
+            </a>
+            <a href="{{ path('app_login') }}" class="btn btn-lg" style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.3)">
+                <i class="fa-solid fa-right-to-bracket me-2"></i>Se connecter
+            </a>
+        </div>
+    </div>
+</section>
 
 {% endblock %}

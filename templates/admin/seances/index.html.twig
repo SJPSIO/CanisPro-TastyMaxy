@@ -1,0 +1,63 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Gestion des séances – Admin{% endblock %}
+
+{% block admin_body %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 style="font-family:'Montserrat',sans-serif;font-weight:800">Gestion des séances</h2>
+        <p class="text-muted mb-0">{{ seances|length }} séances planifiées</p>
+    </div>
+    <a href="{{ path('app_admin_seance_new') }}" class="btn btn-canispro">
+        <i class="fa-solid fa-plus me-2"></i>Nouvelle séance
+    </a>
+</div>
+
+<div class="table-canis">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Cours</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Lieu</th>
+                <th>Inscriptions</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in seances %}
+            <tr>
+                <td class="text-muted" style="font-size:.85rem">{{ s.id }}</td>
+                <td><strong>{{ s.cours }}</strong></td>
+                <td>{{ s.date|date('d/m/Y') }}</td>
+                <td>{{ s.heure }}</td>
+                <td>{{ s.lieu }}</td>
+                <td>
+                    {% set pct = (s.nb_inscriptions / s.max) * 100 %}
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="progress flex-fill" style="height:6px;width:80px">
+                            <div class="progress-bar" style="width:{{ pct }}%;background:{% if pct >= 100 %}#dc3545{% elseif pct >= 70 %}#ffc107{% else %}var(--orange){% endif %}"></div>
+                        </div>
+                        <span style="font-size:.82rem;white-space:nowrap">{{ s.nb_inscriptions }}/{{ s.max }}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex gap-2">
+                        <a href="{{ path('app_admin_seance_edit', {id: s.id}) }}" class="btn-action btn-action-edit" title="Modifier">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+                        <button type="button" class="btn-action btn-action-delete" title="Supprimer">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription – CanisPro{% endblock %}
+
+{% block body %}
+<div style="background:linear-gradient(135deg,var(--dark),var(--dark2));min-height:calc(100vh - 70px);display:flex;align-items:center;padding:40px 0">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+
+                <div class="text-center mb-4">
+                    <img src="{{ asset('img/logo.png') }}" width="64" height="64" alt="Logo" style="border-radius:12px">
+                    <h1 style="font-family:'Montserrat',sans-serif;font-size:1.5rem;font-weight:800;color:#fff;margin-top:12px">
+                        Créer un compte
+                    </h1>
+                    <p style="color:rgba(255,255,255,.6);font-size:.9rem">Rejoignez CanisPro et gérez vos inscriptions</p>
+                </div>
+
+                <div class="card" style="border:none;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+                    <div class="card-body p-5">
+                        <form class="form-canis">
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label">Prénom</label>
+                                    <input type="text" class="form-control" placeholder="Marie">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Nom</label>
+                                    <input type="text" class="form-control" placeholder="Dubois">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fa-solid fa-phone me-2" style="color:var(--orange)"></i>Téléphone
+                                </label>
+                                <input type="tel" class="form-control" placeholder="06 12 34 56 78">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fa-solid fa-envelope me-2" style="color:var(--orange)"></i>Adresse email
+                                </label>
+                                <input type="email" class="form-control" placeholder="votre@email.fr">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fa-solid fa-lock me-2" style="color:var(--orange)"></i>Mot de passe
+                                </label>
+                                <input type="password" class="form-control" placeholder="Minimum 8 caractères">
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Confirmer le mot de passe</label>
+                                <input type="password" class="form-control" placeholder="••••••••">
+                            </div>
+
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="cgu">
+                                <label class="form-check-label text-muted" for="cgu" style="font-size:.88rem">
+                                    J'accepte les <a href="#" style="color:var(--orange)">conditions d'utilisation</a>
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-canispro w-100 py-3">
+                                <i class="fa-solid fa-user-plus me-2"></i>Créer mon compte
+                            </button>
+
+                        </form>
+
+                        <hr class="my-4">
+
+                        <div class="text-center">
+                            <p class="text-muted mb-0" style="font-size:.9rem">
+                                Déjà un compte ?
+                                <a href="{{ path('app_login') }}" style="color:var(--orange);font-weight:600">Se connecter</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="{{ path('app_main') }}" style="color:rgba(255,255,255,.5);font-size:.85rem">
+                        <i class="fa-solid fa-arrow-left me-1"></i>Retour à l'accueil
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

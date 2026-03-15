@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="layout-sidebar">
+
+    {# ===== SIDEBAR ADMIN ===== #}
+    <nav class="sidebar">
+        <div class="px-4 py-3 mb-2 d-flex align-items-center gap-2">
+            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                 style="width:42px;height:42px;background:var(--orange);font-size:1rem">
+                <i class="fa-solid fa-shield" style="color:#fff"></i>
+            </div>
+            <div>
+                <div style="color:#fff;font-weight:600;font-size:.9rem">Administrateur</div>
+                <div style="color:rgba(255,255,255,.45);font-size:.75rem">Accès complet</div>
+            </div>
+        </div>
+
+        <div class="sidebar-title">Général</div>
+        <a href="{{ path('app_admin_dashboard') }}"     class="{{ app.request.attributes.get('_route') == 'app_admin_dashboard'     ? 'active' : '' }}"><i class="fa-solid fa-gauge-high"></i> Tableau de bord</a>
+
+        <div class="sidebar-title">Cours & Séances</div>
+        <a href="{{ path('app_admin_cours') }}"         class="{{ app.request.attributes.get('_route') starts with 'app_admin_cours'  ? 'active' : '' }}"><i class="fa-solid fa-graduation-cap"></i> Gestion des cours</a>
+        <a href="{{ path('app_admin_seances') }}"       class="{{ app.request.attributes.get('_route') starts with 'app_admin_seance' ? 'active' : '' }}"><i class="fa-solid fa-calendar-days"></i> Gestion des séances</a>
+        <a href="{{ path('app_admin_inscriptions') }}"  class="{{ app.request.attributes.get('_route') == 'app_admin_inscriptions'   ? 'active' : '' }}"><i class="fa-solid fa-list-check"></i> Inscriptions</a>
+
+        <div class="sidebar-title">Membres</div>
+        <a href="{{ path('app_admin_utilisateurs') }}"  class="{{ app.request.attributes.get('_route') == 'app_admin_utilisateurs'   ? 'active' : '' }}"><i class="fa-solid fa-users"></i> Utilisateurs</a>
+        <a href="{{ path('app_admin_proprietaires') }}" class="{{ app.request.attributes.get('_route') == 'app_admin_proprietaires'  ? 'active' : '' }}"><i class="fa-solid fa-user-tie"></i> Propriétaires</a>
+        <a href="{{ path('app_admin_chiens') }}"        class="{{ app.request.attributes.get('_route') == 'app_admin_chiens'         ? 'active' : '' }}"><i class="fa-solid fa-dog"></i> Chiens</a>
+
+        <div class="sidebar-title">Compte</div>
+        <a href="{{ path('app_logout') }}" style="color:#f87171"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
+    </nav>
+
+    {# ===== CONTENU ===== #}
+    <div class="content-area">
+        {% block admin_body %}{% endblock %}
+    </div>
+
+</div>
+{% endblock %}

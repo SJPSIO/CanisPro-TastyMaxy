@@ -1,0 +1,91 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Dashboard admin – CanisPro{% endblock %}
+
+{% block admin_body %}
+
+<div class="mb-4">
+    <h2 style="font-family:'Montserrat',sans-serif;font-weight:800">Tableau de bord</h2>
+    <p class="text-muted">Vue d'ensemble de l'application CanisPro</p>
+</div>
+
+{# Stat cards #}
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-4">
+        <div class="stat-card stat-orange">
+            <div class="stat-number">{{ stats.nb_cours }}</div>
+            <div class="stat-label">Cours actifs</div>
+            <i class="fa-solid fa-graduation-cap stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-4">
+        <div class="stat-card stat-dark">
+            <div class="stat-number">{{ stats.nb_seances }}</div>
+            <div class="stat-label">Séances planifiées</div>
+            <i class="fa-solid fa-calendar-days stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-4">
+        <div class="stat-card stat-blue">
+            <div class="stat-number">{{ stats.nb_inscriptions }}</div>
+            <div class="stat-label">Inscriptions totales</div>
+            <i class="fa-solid fa-list-check stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-6">
+        <div class="stat-card stat-green">
+            <div class="stat-number">{{ stats.nb_utilisateurs }}</div>
+            <div class="stat-label">Membres inscrits</div>
+            <i class="fa-solid fa-users stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-6">
+        <div class="stat-card" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">
+            <div class="stat-number">{{ stats.nb_chiens }}</div>
+            <div class="stat-label">Chiens enregistrés</div>
+            <i class="fa-solid fa-dog stat-icon"></i>
+        </div>
+    </div>
+</div>
+
+{# Accès rapides #}
+<div class="row g-3">
+    <div class="col-12">
+        <h5 style="font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:16px">Accès rapides</h5>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ path('app_admin_cours_new') }}" class="card card-canis text-decoration-none d-flex flex-row align-items-center gap-3 p-3">
+            <div style="background:var(--orange-pale);border-radius:10px;width:48px;height:48px;display:flex;align-items:center;justify-content:center">
+                <i class="fa-solid fa-plus" style="color:var(--orange)"></i>
+            </div>
+            <div>
+                <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:.95rem">Nouveau cours</div>
+                <div class="text-muted" style="font-size:.8rem">Créer un cours</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ path('app_admin_seance_new') }}" class="card card-canis text-decoration-none d-flex flex-row align-items-center gap-3 p-3">
+            <div style="background:var(--orange-pale);border-radius:10px;width:48px;height:48px;display:flex;align-items:center;justify-content:center">
+                <i class="fa-solid fa-calendar-plus" style="color:var(--orange)"></i>
+            </div>
+            <div>
+                <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:.95rem">Nouvelle séance</div>
+                <div class="text-muted" style="font-size:.8rem">Planifier une séance</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ path('app_admin_inscriptions') }}" class="card card-canis text-decoration-none d-flex flex-row align-items-center gap-3 p-3">
+            <div style="background:var(--orange-pale);border-radius:10px;width:48px;height:48px;display:flex;align-items:center;justify-content:center">
+                <i class="fa-solid fa-list-check" style="color:var(--orange)"></i>
+            </div>
+            <div>
+                <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:.95rem">Inscriptions</div>
+                <div class="text-muted" style="font-size:.8rem">Gérer les inscriptions</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+{% endblock %}

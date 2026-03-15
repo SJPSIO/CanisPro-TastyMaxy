@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ cours.titre }} – CanisPro{% endblock %}
+
+{% block body %}
+
+{# ===== EN-TÊTE ===== #}
+<div class="page-header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" style="--bs-breadcrumb-divider-color:rgba(255,255,255,.5)">
+                <li class="breadcrumb-item"><a href="{{ path('app_main') }}" style="color:rgba(255,255,255,.6)">Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('app_cours_index') }}" style="color:rgba(255,255,255,.6)">Nos cours</a></li>
+                <li class="breadcrumb-item active text-white">{{ cours.titre }}</li>
+            </ol>
+        </nav>
+        <div class="d-flex gap-2 mb-3">
+            <span class="badge rounded-pill" style="background:var(--orange);font-size:.75rem">{{ cours.type }}</span>
+            <span class="badge rounded-pill" style="background:rgba(255,255,255,.15);font-size:.75rem">{{ cours.niveau }}</span>
+        </div>
+        <h1>{{ cours.titre }}</h1>
+        <p>{{ cours.description }}</p>
+    </div>
+</div>
+
+{# ===== CONTENU ===== #}
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+
+            {# Infos cours #}
+            <div class="col-lg-4">
+                <div class="card card-canis">
+                    <div class="card-body p-4">
+                        <h5 style="font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:20px">
+                            <i class="fa-solid fa-circle-info me-2" style="color:var(--orange)"></i>Informations
+                        </h5>
+
+                        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid #f0f0f0">
+                            <span class="text-muted">Type</span>
+                            <strong>{{ cours.type }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid #f0f0f0">
+                            <span class="text-muted">Niveau</span>
+                            <strong>{{ cours.niveau }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid #f0f0f0">
+                            <span class="text-muted">Tarif</span>
+                            <strong style="color:var(--orange)">{{ cours.prix|number_format(2, ',', ' ') }} € / séance</strong>
+                        </div>
+                        {% if cours.type == 'Collectif' %}
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted">Places max</span>
+                            <strong>15 chiens</strong>
+                        </div>
+                        {% else %}
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted">Chiens par séance</span>
+                            <strong>1 chien</strong>
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-4">
+                            <a href="{{ path('app_register') }}" class="btn btn-canispro w-100">
+                                <i class="fa-solid fa-user-plus me-2"></i>Créer un compte pour s'inscrire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Tableau des séances #}
+            <div class="col-lg-8">
+                <h4 style="font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:20px">
+                    <i class="fa-solid fa-calendar-days me-2" style="color:var(--orange)"></i>Séances à venir
+                </h4>
+
+                {% if seances is empty %}
+                <div class="alert alert-light border text-center py-4">
+                    <i class="fa-solid fa-calendar-xmark fa-2x text-muted mb-2"></i>
+                    <p class="mb-0 text-muted">Aucune séance disponible pour le moment.</p>
+                </div>
+                {% else %}
+                <div class="table-canis">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Heure</th>
+                                <th>Lieu</th>
+                                <th>Places</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for seance in seances %}
+                            <tr>
+                                <td>
+                                    <i class="fa-regular fa-calendar me-2 text-muted"></i>
+                                    {{ seance.date|date('d/m/Y') }}
+                                </td>
+                                <td><i class="fa-regular fa-clock me-2 text-muted"></i>{{ seance.heure }}</td>
+                                <td><i class="fa-solid fa-location-dot me-2 text-muted"></i>{{ seance.lieu }}</td>
+                                <td>
+                                    {% if seance.places_restantes == 0 %}
+                                        <span class="badge bg-danger">Complet</span>
+                                    {% elseif seance.places_restantes <= 3 %}
+                                        <span class="badge bg-warning text-dark">{{ seance.places_restantes }} place{% if seance.places_restantes > 1 %}s{% endif %}</span>
+                                    {% else %}
+                                        <span class="badge bg-success">{{ seance.places_restantes }} places</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ path('app_login') }}" class="btn btn-sm btn-canispro">
+                                        S'inscrire
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
