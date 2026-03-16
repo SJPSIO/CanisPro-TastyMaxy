@@ -5,6 +5,10 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Entity\Chien;
+use App\Form\ChienType;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 #[Route('/membre')]
 final class MembreController extends AbstractController
@@ -45,10 +49,31 @@ final class MembreController extends AbstractController
     }
 
     #[Route('/chiens/nouveau', name: 'app_membre_chien_new')]
-    public function chienNew(): Response
-    {
-        return $this->render('membre/chiens/new.html.twig');
+public function chienNew(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $chien = new Chien();
+
+    $form = $this->createForm(ChienType::class, $chien);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+
+        $user = $this->getUser();
+
+        $proprietaire = $user->getProprietaire();
+
+        $chien->setProprietaire($proprietaire);
+
+        $entityManager->persist($chien);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_membre_chiens');
     }
+
+    return $this->render('membre/chiens/new.html.twig', [
+        'form' => $form->createView(),
+    ]);
+}
 
     #[Route('/chiens/{id}/edit', name: 'app_membre_chien_edit', requirements: ['id' => '\d+'])]
     public function chienEdit(int $id): Response

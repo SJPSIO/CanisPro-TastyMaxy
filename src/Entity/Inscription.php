@@ -16,6 +16,14 @@ class Inscription
     #[ORM\Column]
     private ?\DateTime $dateInscription = null;
 
+    #[ORM\ManyToOne(inversedBy: 'inscriptions', targetEntity: Chien::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private ?Chien $chien = null;
+
+    #[ORM\ManyToOne(inversedBy: 'inscriptions', targetEntity: Seance::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private ?Seance $seance = null;
+
     public function getId(): ?int
     {
         return $this->id;
