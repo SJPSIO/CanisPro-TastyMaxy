@@ -42,9 +42,12 @@
                 </td>
                 <td>{% if u.proprietaire %}{{ u.proprietaire }}{% else %}<span class="text-muted">—</span>{% endif %}</td>
                 <td>
-                    <button type="button" class="btn-action btn-action-delete" title="Supprimer">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
+                    <form method="POST" action="{{ path('admin_utilisateur_supprimer', {id: u.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ u.id) }}">
+                        <button type="submit" class="btn-action btn-action-delete" title="Supprimer">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}

@@ -36,11 +36,15 @@
                 </td>
                 <td>{{ p.telephone }}</td>
                 <td class="text-muted" style="font-size:.88rem">{{ p.email }}</td>
-                <td><span class="badge bg-secondary">{{ p.nb_chiens }} chien{% if p.nb_chiens > 1 %}s{% endif %}</span></td>
+                <td><span class="badge bg-secondary">{{ p.nbChiens }} chien{% if p.nbChiens > 1 %}s{% endif %}</span></td>
                 <td>
-                    <button type="button" class="btn-action btn-action-delete" title="Supprimer">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
+                    <form method="POST" action="{{ path('admin_proprietaire_supprimer', {id: p.id}) }}"
+                        onsubmit="return confirm('Voulez-vous vraiment supprimer ce propriétaire ?');" style="display:inline">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ p.id) }}">
+                        <button type="submit" class="btn-action btn-action-delete" title="Supprimer">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}

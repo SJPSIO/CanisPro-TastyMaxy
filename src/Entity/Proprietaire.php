@@ -98,6 +98,16 @@ class Proprietaire
         return $this;
     }
 
+    public function getEmail(): ?string
+    {
+        return $this->utilisateur ? $this->utilisateur->getEmail() : null;
+    }
+
+    public function getNbChiens(): int
+    {
+        return $this->chiens->count();
+    }
+
     /**
      * @return Collection<int, Chien>
      */

@@ -2,9 +2,20 @@
 
 namespace App\Controller;
 
+use App\Repository\ChienRepository;
+use App\Repository\UtilisateurRepository;
+use App\Repository\ProprietaireRepository;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
+use App\Entity\Utilisateur;
+use App\Entity\Proprietaire;
+use App\Entity\Chien;
+
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/admin')]
 final class AdminController extends AbstractController
@@ -31,20 +42,35 @@ final class AdminController extends AbstractController
     // ---- Utilisateurs ----
 
     #[Route('/utilisateurs', name: 'app_admin_utilisateurs')]
-    public function utilisateurs(): Response
+    public function utilisateurs(UtilisateurRepository $utilisateurRepository): Response
     {
-        $utilisateurs = [
-            ['id' => 1, 'email' => 'admin@canispro.fr',      'roles' => ['ROLE_ADMIN'], 'proprietaire' => null],
-            ['id' => 2, 'email' => 'marie.dubois@email.fr',  'roles' => ['ROLE_USER'],  'proprietaire' => 'Dubois Marie'],
-            ['id' => 3, 'email' => 'jean.martin@email.fr',   'roles' => ['ROLE_USER'],  'proprietaire' => 'Martin Jean'],
-            ['id' => 4, 'email' => 'sophie.leroy@email.fr',  'roles' => ['ROLE_USER'],  'proprietaire' => 'Leroy Sophie'],
-            ['id' => 5, 'email' => 'paul.petit@email.fr',    'roles' => ['ROLE_USER'],  'proprietaire' => 'Petit Paul'],
-        ];
+        // Récupération de tous les utilisateurs depuis la BDD
+        $utilisateurs = $utilisateurRepository->findAll();
 
         return $this->render('admin/utilisateurs/index.html.twig', [
             'utilisateurs' => $utilisateurs,
         ]);
     }
+
+    // Suppression (calqué sur le tp2)
+    #[Route('/admin/utilisateur/supprimer/{id}', name: 'admin_utilisateur_supprimer', methods: ['POST'])]
+    public function supprimerUtilisateur(
+        Utilisateur $utilisateur,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+
+        if ($this->isCsrfTokenValid('delete' . $utilisateur->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($utilisateur);
+            $entityManager->flush();
+            $this->addFlash('success', 'Utilisateur supprimé avec succès.');
+        } else {
+            $this->addFlash('error', 'Token CSRF invalide.');
+        }
+
+        return $this->redirectToRoute('app_admin_utilisateurs');
+    }
+    
 
     // ---- Cours ----
 
@@ -156,35 +182,63 @@ final class AdminController extends AbstractController
     // ---- Propriétaires ----
 
     #[Route('/proprietaires', name: 'app_admin_proprietaires')]
-    public function proprietaires(): Response
+    public function proprietaires(ProprietaireRepository $proprietaireRepository): Response
     {
-        $proprietaires = [
-            ['id' => 1, 'nom' => 'Dubois',  'prenom' => 'Marie',  'telephone' => '06 12 34 56 78', 'email' => 'marie.dubois@email.fr',  'nb_chiens' => 2],
-            ['id' => 2, 'nom' => 'Martin',  'prenom' => 'Jean',   'telephone' => '07 98 76 54 32', 'email' => 'jean.martin@email.fr',   'nb_chiens' => 1],
-            ['id' => 3, 'nom' => 'Leroy',   'prenom' => 'Sophie', 'telephone' => '06 55 44 33 22', 'email' => 'sophie.leroy@email.fr',  'nb_chiens' => 3],
-            ['id' => 4, 'nom' => 'Petit',   'prenom' => 'Paul',   'telephone' => '07 11 22 33 44', 'email' => 'paul.petit@email.fr',    'nb_chiens' => 1],
-        ];
+
+        $proprietaires = $proprietaireRepository->findAll();
 
         return $this->render('admin/proprietaires/index.html.twig', [
             'proprietaires' => $proprietaires,
         ]);
     }
 
+    // Supression (calqué sur le tp2)
+    #[Route('/admin/proprietaire/supprimer/{id}', name: 'admin_proprietaire_supprimer', methods: ['POST'])]
+    public function supprimerProprietaire(
+        Proprietaire $proprietaire,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+
+        if ($this->isCsrfTokenValid('delete' . $proprietaire->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($proprietaire);
+            $entityManager->flush();
+            $this->addFlash('success', 'Propriétaire supprimé avec succès.');
+        } else {
+            $this->addFlash('error', 'Token CSRF invalide.');
+        }
+
+        return $this->redirectToRoute('app_admin_proprietaires');
+    }
+
     // ---- Chiens ----
 
     #[Route('/chiens', name: 'app_admin_chiens')]
-    public function chiens(): Response
+    public function chiens(ChienRepository $chienRepository): Response
     {
-        $chiens = [
-            ['id' => 1, 'nom' => 'Rocky', 'race' => 'Berger Allemand',  'proprietaire' => 'Dubois Marie',  'naissance' => '2022-05-14', 'nb_inscriptions' => 2],
-            ['id' => 2, 'nom' => 'Luna',  'race' => 'Golden Retriever', 'proprietaire' => 'Dubois Marie',  'naissance' => '2023-01-20', 'nb_inscriptions' => 1],
-            ['id' => 3, 'nom' => 'Buddy', 'race' => 'Labrador',         'proprietaire' => 'Martin Jean',   'naissance' => '2021-09-03', 'nb_inscriptions' => 1],
-            ['id' => 4, 'nom' => 'Bella', 'race' => 'Chihuahua',        'proprietaire' => 'Leroy Sophie',  'naissance' => '2023-06-11', 'nb_inscriptions' => 1],
-            ['id' => 5, 'nom' => 'Max',   'race' => 'Border Collie',    'proprietaire' => 'Petit Paul',    'naissance' => '2020-12-25', 'nb_inscriptions' => 1],
-        ];
+        $chiens = $chienRepository->findAll();
 
         return $this->render('admin/chiens/index.html.twig', [
             'chiens' => $chiens,
         ]);
     }
+
+    #[Route('/admin/chien/supprimer/{id}', name: 'admin_chien_supprimer', methods: ['POST'])]
+    public function supprimerChien(
+        Chien $chien,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+
+        if ($this->isCsrfTokenValid('delete' . $chien->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($chien);
+            $entityManager->flush();
+            $this->addFlash('success', 'Chien supprimé avec succès.');
+        } else {
+            $this->addFlash('error', 'Token CSRF invalide.');
+        }
+
+        return $this->redirectToRoute('app_admin_chiens');
+    }
+
 }

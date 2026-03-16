@@ -34,12 +34,16 @@
                 </td>
                 <td>{{ c.race }}</td>
                 <td>{{ c.proprietaire }}</td>
-                <td>{{ c.naissance|date('d/m/Y') }}</td>
-                <td><span class="badge bg-secondary">{{ c.nb_inscriptions }}</span></td>
+                <td>{{ c.dateNaissance|date('d/m/Y') }}</td>
+                <td><span class="badge bg-secondary">{{ c.nb_inscriptions ?? 0 }}</span></td>
                 <td>
-                    <button type="button" class="btn-action btn-action-delete" title="Supprimer">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
+                    <form method="POST" action="{{ path('admin_chien_supprimer', {id: c.id}) }}"
+                        onsubmit="return confirm('Voulez-vous vraiment supprimer ce chien ?');" style="display:inline">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ c.id) }}">
+                        <button type="submit" class="btn-action btn-action-delete" title="Supprimer">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
