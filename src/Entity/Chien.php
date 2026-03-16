@@ -23,6 +23,9 @@ class Chien
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTime $dateNaissance = null;
 
+    #[ORM\ManyToOne(inversedBy: 'chiens')]
+    private ?Proprietaire $proprietaire = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +63,18 @@ class Chien
     public function setDateNaissance(?\DateTime $dateNaissance): static
     {
         $this->dateNaissance = $dateNaissance;
+
+        return $this;
+    }
+
+    public function getProprietaire(): ?Proprietaire
+    {
+        return $this->proprietaire;
+    }
+
+    public function setProprietaire(?Proprietaire $proprietaire): static
+    {
+        $this->proprietaire = $proprietaire;
 
         return $this;
     }

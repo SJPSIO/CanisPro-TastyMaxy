@@ -35,7 +35,7 @@
             {% for inscription in inscriptions %}
             <tr>
                 <td><strong>{{ inscription.cours }}</strong></td>
-                <td><span class="badge" style="background:var(--orange-pale);color:var(--orange)">🐕 {{ inscription.chien }}</span></td>
+                <td><span class="badge" style="background:var(--orange-pale);color:var(--orange)"> {{ inscription.chien }}</span></td>
                 <td>
                     <i class="fa-regular fa-calendar me-1 text-muted"></i>
                     {{ inscription.date_seance|date('d/m/Y') }} à {{ inscription.heure }}

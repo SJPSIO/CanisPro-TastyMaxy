@@ -26,7 +26,7 @@
             {% for i in inscriptions %}
             <tr>
                 <td class="text-muted" style="font-size:.85rem">{{ i.id }}</td>
-                <td><span class="badge" style="background:var(--orange-pale);color:var(--orange)">🐕 {{ i.chien }}</span></td>
+                <td><span class="badge" style="background:var(--orange-pale);color:var(--orange)"> {{ i.chien }}</span></td>
                 <td>{{ i.proprietaire }}</td>
                 <td><strong>{{ i.cours }}</strong></td>
                 <td>{{ i.date_seance|date('d/m/Y') }} à {{ i.heure }}</td>

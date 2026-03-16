@@ -22,6 +22,9 @@ class Utilisateur
     #[ORM\Column]
     private array $roles = [];
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Proprietaire $proprietaire = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -66,6 +69,18 @@ class Utilisateur
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getProprietaire(): ?Proprietaire
+    {
+        return $this->proprietaire;
+    }
+
+    public function setProprietaire(?Proprietaire $proprietaire): static
+    {
+        $this->proprietaire = $proprietaire;
 
         return $this;
     }
