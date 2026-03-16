@@ -1,0 +1,112 @@
+{% extends 'membre/base_membre.html.twig' %}
+
+{% block title %}Mon espace – CanisPro{% endblock %}
+
+{% block membre_body %}
+
+<div class="mb-4">
+    <h2 style="font-family:'Montserrat',sans-serif;font-weight:800">Bonjour, Marie 👋</h2>
+    <p class="text-muted">Bienvenue dans votre espace personnel CanisPro.</p>
+</div>
+
+{# Stat cards #}
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card stat-orange">
+            <div class="stat-number">2</div>
+            <div class="stat-label">Mes chiens</div>
+            <i class="fa-solid fa-dog stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card stat-dark">
+            <div class="stat-number">2</div>
+            <div class="stat-label">Inscriptions actives</div>
+            <i class="fa-solid fa-list-check stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card stat-blue">
+            <div class="stat-number">4</div>
+            <div class="stat-label">Séances disponibles</div>
+            <i class="fa-solid fa-calendar-days stat-icon"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card stat-green">
+            <div class="stat-number">5</div>
+            <div class="stat-label">Séances suivies</div>
+            <i class="fa-solid fa-trophy stat-icon"></i>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+
+    {# Prochaines inscriptions #}
+    <div class="col-lg-7">
+        <div class="card card-canis">
+            <div class="card-body p-4">
+                <h5 style="font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:20px">
+                    <i class="fa-solid fa-calendar-check me-2" style="color:var(--orange)"></i>Mes prochaines séances
+                </h5>
+                <div class="table-canis">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr><th>Cours</th><th>Chien</th><th>Date</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Obéissance débutant</td>
+                                <td><span class="badge" style="background:var(--orange-pale);color:var(--orange)">Rocky</span></td>
+                                <td>05/04/2025 – 10h</td>
+                            </tr>
+                            <tr>
+                                <td>Cours chiot</td>
+                                <td><span class="badge" style="background:var(--orange-pale);color:var(--orange)">Luna</span></td>
+                                <td>07/04/2025 – 14h</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{{ path('app_membre_inscriptions') }}" class="btn btn-outline-canispro btn-sm mt-3">
+                    Voir toutes mes inscriptions
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {# Mes chiens #}
+    <div class="col-lg-5">
+        <div class="card card-canis">
+            <div class="card-body p-4">
+                <h5 style="font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:20px">
+                    <i class="fa-solid fa-dog me-2" style="color:var(--orange)"></i>Mes chiens
+                </h5>
+                <div class="d-flex align-items-center gap-3 py-2 mb-2" style="border-bottom:1px solid #f0f0f0">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                         style="width:44px;height:44px;background:var(--orange-pale);font-size:1.2rem"></div>
+                    <div>
+                        <div class="fw-bold">Rocky</div>
+                        <div class="text-muted" style="font-size:.82rem">Berger Allemand · né le 14/05/2022</div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-3 py-2">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                         style="width:44px;height:44px;background:var(--orange-pale);font-size:1.2rem"></div>
+                    <div>
+                        <div class="fw-bold">Luna</div>
+                        <div class="text-muted" style="font-size:.82rem">Golden Retriever · né le 20/01/2023</div>
+                    </div>
+                </div>
+                <a href="{{ path('app_membre_chiens') }}" class="btn btn-outline-canispro btn-sm mt-3 me-2">Gérer mes chiens</a>
+                <a href="{{ path('app_membre_chien_new') }}" class="btn btn-canispro btn-sm mt-3">
+                    <i class="fa-solid fa-plus me-1"></i>Ajouter
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

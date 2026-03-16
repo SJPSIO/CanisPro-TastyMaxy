@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos cours – CanisPro{% endblock %}
+
+{% block body %}
+
+{# ===== EN-TÊTE ===== #}
+<div class="page-header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" style="--bs-breadcrumb-divider-color:rgba(255,255,255,.5)">
+                <li class="breadcrumb-item"><a href="{{ path('app_main') }}" style="color:rgba(255,255,255,.6)">Accueil</a></li>
+                <li class="breadcrumb-item active text-white">Nos cours</li>
+            </ol>
+        </nav>
+        <h1><i class="fa-solid fa-graduation-cap me-3" style="color:var(--orange)"></i>Nos cours</h1>
+        <p>Découvrez nos formations pour construire une relation équilibrée avec votre chien</p>
+    </div>
+</div>
+
+{# ===== FILTRES ===== #}
+<section style="background:#fff;border-bottom:1px solid #f0f0f0;padding:20px 0">
+    <div class="container">
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+            <span class="fw-semibold text-muted me-2" style="font-size:.9rem">Filtrer :</span>
+            <button class="btn btn-sm btn-canispro">Tous</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill">Individuel</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill">Collectif</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill">Chiot</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill">Débutant</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill">Confirmé</button>
+        </div>
+    </div>
+</section>
+
+{# ===== LISTE DES COURS ===== #}
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            {% for c in cours %}
+            <div class="col-md-6 col-lg-4">
+                <div class="cours-card card h-100">
+                    <div class="card-header-strip"></div>
+                    <div class="card-body">
+
+                        {# Type + Niveau #}
+                        <div class="d-flex gap-2 mb-3">
+                            <span class="badge rounded-pill" style="background:var(--dark);color:#fff;font-size:.73rem">
+                                <i class="fa-solid fa-{% if c.type == 'Individuel' %}user{% else %}users{% endif %} me-1"></i>
+                                {{ c.type }}
+                            </span>
+                            <span class="badge-niveau badge
+                                {% if c.niveau == 'Chiot' %}badge-chiot
+                                {% elseif c.niveau == 'Débutant' %}badge-debutant
+                                {% else %}badge-confirme{% endif %}">
+                                {{ c.niveau }}
+                            </span>
+                        </div>
+
+                        {# Icône + Titre #}
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                                 style="width:48px;height:48px;background:var(--orange-pale)">
+                                <i class="fa-solid fa-{{ c.icone }}" style="color:var(--orange)"></i>
+                            </div>
+                            <h3 class="mb-0" style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:700">{{ c.titre }}</h3>
+                        </div>
+
+                        <p class="text-muted" style="font-size:.9rem;line-height:1.6">{{ c.description }}</p>
+
+                        {# Prix + Bouton #}
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top:1px solid #f0f0f0">
+                            <div>
+                                <div class="cours-prix">{{ c.prix|number_format(2, ',', ' ') }} €<small> / séance</small></div>
+                            </div>
+                            <a href="{{ path('app_cours_show', {id: c.id}) }}" class="btn btn-canispro btn-sm">
+                                Voir les séances <i class="fa-solid fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

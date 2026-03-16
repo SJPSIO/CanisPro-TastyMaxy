@@ -1,0 +1,57 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Modifier séance – Admin{% endblock %}
+
+{% block admin_body %}
+
+<div class="mb-4">
+    <a href="{{ path('app_admin_seances') }}" class="btn btn-sm btn-outline-secondary mb-3">
+        <i class="fa-solid fa-arrow-left me-1"></i>Retour
+    </a>
+    <h2 style="font-family:'Montserrat',sans-serif;font-weight:800">Modifier la séance</h2>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card card-canis">
+            <div class="card-body p-4">
+                <form class="form-canis">
+                    <div class="mb-3">
+                        <label class="form-label">Cours associé</label>
+                        <select class="form-select">
+                            {% for c in cours %}
+                            <option value="{{ c.id }}" {% if c.id == seance.cours_id %}selected{% endif %}>{{ c.titre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-control" value="{{ seance.date }}">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Heure</label>
+                            <input type="time" class="form-control" value="{{ seance.heure }}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lieu</label>
+                        <input type="text" class="form-control" value="{{ seance.lieu }}">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Places max</label>
+                        <input type="number" class="form-control" value="{{ seance.nb_places_max }}">
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-canispro">
+                            <i class="fa-solid fa-floppy-disk me-2"></i>Enregistrer
+                        </button>
+                        <a href="{{ path('app_admin_seances') }}" class="btn btn-outline-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

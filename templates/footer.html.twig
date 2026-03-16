@@ -1,0 +1,68 @@
+<footer class="footer-canis">
+    <div class="container">
+        <div class="row g-4">
+
+            {# Colonne marque #}
+            <div class="col-lg-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <img src="{{ asset('img/logo.png') }}" width="42" height="42" alt="Logo" style="border-radius:8px">
+                    <span class="footer-logo-text">Canis<span>Pro</span></span>
+                </div>
+                <p>Centre d'éducation canine professionnel dédié au bien-être de votre chien et à la qualité de votre relation.</p>
+                <div class="d-flex gap-3 mt-3">
+                    <a href="#" class="footer-icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="footer-icon"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+
+            {# Navigation rapide #}
+            <div class="col-lg-2 col-md-4">
+                <h5>Navigation</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ path('app_main') }}">Accueil</a></li>
+                    <li><a href="{{ path('app_cours_index') }}">Nos cours</a></li>
+                    <li><a href="{{ path('app_contact') }}">À propos</a></li>
+                    <li><a href="{{ path('app_login') }}">Connexion</a></li>
+                </ul>
+            </div>
+
+            {# Nos cours #}
+            <div class="col-lg-3 col-md-4">
+                <h5>Nos cours</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Cours individuel</a></li>
+                    <li><a href="#">Sociabilisation</a></li>
+                    <li><a href="#">Obéissance</a></li>
+                    <li><a href="#">Agility</a></li>
+                </ul>
+            </div>
+
+            {# Contact #}
+            <div class="col-lg-3 col-md-4">
+                <h5>Contact</h5>
+                <ul class="list-unstyled">
+                    <li><i class="fa-solid fa-location-dot me-2" style="color:var(--orange)"></i>12 Rue des Chiens, Lyon</li>
+                    <li><i class="fa-solid fa-phone me-2" style="color:var(--orange)"></i>04 78 12 34 56</li>
+                    <li><i class="fa-solid fa-envelope me-2" style="color:var(--orange)"></i>contact@canispro.fr</li>
+                    <li class="mt-2"><i class="fa-solid fa-clock me-2" style="color:var(--orange)"></i>Lun–Sam : 9h–18h</li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="footer-bottom text-center">
+            © 2025 CanisPro Éducation – Tous droits réservés
+        </div>
+    </div>
+</footer>
+
+<style>
+.footer-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.7) !important;
+    transition: 0.3s;
+}
+.footer-icon:hover { background: var(--orange); color: #fff !important; }
+</style>

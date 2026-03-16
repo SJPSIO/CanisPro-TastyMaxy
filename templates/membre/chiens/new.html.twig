@@ -1,0 +1,44 @@
+{% extends 'membre/base_membre.html.twig' %}
+
+{% block title %}Ajouter un chien – CanisPro{% endblock %}
+
+{% block membre_body %}
+
+<div class="mb-4">
+    <a href="{{ path('app_membre_chiens') }}" class="btn btn-sm btn-outline-secondary mb-3">
+        <i class="fa-solid fa-arrow-left me-1"></i>Retour
+    </a>
+    <h2 style="font-family:'Montserrat',sans-serif;font-weight:800">Ajouter un chien</h2>
+    <p class="text-muted">Enregistrez un nouveau compagnon dans votre espace</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card card-canis">
+            <div class="card-body p-4">
+                <form class="form-canis">
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fa-solid fa-tag me-2" style="color:var(--orange)"></i>Nom du chien</label>
+                        <input type="text" class="form-control" placeholder="ex : Rocky">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fa-solid fa-paw me-2" style="color:var(--orange)"></i>Race</label>
+                        <input type="text" class="form-control" placeholder="ex : Berger Allemand">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label"><i class="fa-solid fa-calendar me-2" style="color:var(--orange)"></i>Date de naissance</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-canispro">
+                            <i class="fa-solid fa-plus me-2"></i>Ajouter le chien
+                        </button>
+                        <a href="{{ path('app_membre_chiens') }}" class="btn btn-outline-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

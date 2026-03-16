@@ -1,0 +1,50 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Chiens – Admin{% endblock %}
+
+{% block admin_body %}
+
+<div class="mb-4">
+    <h2 style="font-family:'Montserrat',sans-serif;font-weight:800">Gestion des chiens</h2>
+    <p class="text-muted mb-0">{{ chiens|length }} chiens enregistrés</p>
+</div>
+
+<div class="table-canis">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Race</th>
+                <th>Propriétaire</th>
+                <th>Naissance</th>
+                <th>Inscriptions</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in chiens %}
+            <tr>
+                <td class="text-muted" style="font-size:.85rem">{{ c.id }}</td>
+                <td>
+                    <div class="d-flex align-items-center gap-2">
+                        <span style="font-size:1.2rem"></span>
+                        <strong>{{ c.nom }}</strong>
+                    </div>
+                </td>
+                <td>{{ c.race }}</td>
+                <td>{{ c.proprietaire }}</td>
+                <td>{{ c.naissance|date('d/m/Y') }}</td>
+                <td><span class="badge bg-secondary">{{ c.nb_inscriptions }}</span></td>
+                <td>
+                    <button type="button" class="btn-action btn-action-delete" title="Supprimer">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

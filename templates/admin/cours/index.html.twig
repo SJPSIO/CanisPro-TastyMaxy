@@ -1,0 +1,67 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Gestion des cours – Admin{% endblock %}
+
+{% block admin_body %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 style="font-family:'Montserrat',sans-serif;font-weight:800">Gestion des cours</h2>
+        <p class="text-muted mb-0">{{ cours|length }} cours enregistrés</p>
+    </div>
+    <a href="{{ path('app_admin_cours_new') }}" class="btn btn-canispro">
+        <i class="fa-solid fa-plus me-2"></i>Nouveau cours
+    </a>
+</div>
+
+<div class="table-canis">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Titre</th>
+                <th>Type</th>
+                <th>Niveau</th>
+                <th>Prix</th>
+                <th>Séances</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in cours %}
+            <tr>
+                <td class="text-muted" style="font-size:.85rem">{{ c.id }}</td>
+                <td><strong>{{ c.titre }}</strong></td>
+                <td>
+                    <span class="badge rounded-pill" style="background:var(--dark);color:#fff;font-size:.72rem">{{ c.type }}</span>
+                </td>
+                <td>
+                    <span class="badge-niveau badge
+                        {% if c.niveau == 'Chiot' %}badge-chiot
+                        {% elseif c.niveau == 'Débutant' %}badge-debutant
+                        {% else %}badge-confirme{% endif %}">
+                        {{ c.niveau }}
+                    </span>
+                </td>
+                <td><strong style="color:var(--orange)">{{ c.prix|number_format(2, ',', ' ') }} €</strong></td>
+                <td><span class="badge bg-secondary">{{ c.nb_seances }}</span></td>
+                <td>
+                    <div class="d-flex gap-2">
+                        <a href="{{ path('app_cours_show', {id: c.id}) }}" class="btn-action btn-action-view" title="Voir le cours">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        <a href="{{ path('app_admin_cours_edit', {id: c.id}) }}" class="btn-action btn-action-edit" title="Modifier">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+                        <button type="button" class="btn-action btn-action-delete" title="Supprimer">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

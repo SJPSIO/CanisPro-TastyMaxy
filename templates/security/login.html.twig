@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion – CanisPro{% endblock %}
+
+{% block body %}
+<div style="background:linear-gradient(135deg,var(--dark),var(--dark2));min-height:calc(100vh - 70px);display:flex;align-items:center;padding:40px 0">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+
+                {# Logo #}
+                <div class="text-center mb-4">
+                    <img src="{{ asset('img/logo.png') }}" width="64" height="64" alt="Logo" style="border-radius:12px">
+                    <h1 style="font-family:'Montserrat',sans-serif;font-size:1.5rem;font-weight:800;color:#fff;margin-top:12px">
+                        Connexion à CanisPro
+                    </h1>
+                    <p style="color:rgba(255,255,255,.6);font-size:.9rem">Accédez à votre espace personnel</p>
+                </div>
+
+                <div class="card" style="border:none;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+                    <div class="card-body p-5">
+                        <form class="form-canis">
+
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <i class="fa-solid fa-envelope me-2" style="color:var(--orange)"></i>Adresse email
+                                </label>
+                                <input type="email" class="form-control" placeholder="votre@email.fr">
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <i class="fa-solid fa-lock me-2" style="color:var(--orange)"></i>Mot de passe
+                                </label>
+                                <div class="position-relative">
+                                    <input type="password" class="form-control pe-5" placeholder="••••••••" id="pwdInput">
+                                    <button type="button" class="btn btn-sm position-absolute top-50 translate-middle-y end-0 me-2 text-muted"
+                                            onclick="togglePwd()" style="background:none;border:none">
+                                        <i class="fa-regular fa-eye" id="eyeIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="rememberMe">
+                                    <label class="form-check-label text-muted" for="rememberMe" style="font-size:.88rem">Se souvenir de moi</label>
+                                </div>
+                                <a href="#" style="font-size:.88rem;color:var(--orange)">Mot de passe oublié ?</a>
+                            </div>
+
+                            <button type="submit" class="btn btn-canispro w-100 py-3">
+                                <i class="fa-solid fa-right-to-bracket me-2"></i>Se connecter
+                            </button>
+
+                        </form>
+
+                        <hr class="my-4">
+
+                        <div class="text-center">
+                            <p class="text-muted mb-0" style="font-size:.9rem">
+                                Pas encore de compte ?
+                                <a href="{{ path('app_register') }}" style="color:var(--orange);font-weight:600">Créer un compte</a>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="{{ path('app_main') }}" style="color:rgba(255,255,255,.5);font-size:.85rem">
+                        <i class="fa-solid fa-arrow-left me-1"></i>Retour à l'accueil
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePwd() {
+    const input = document.getElementById('pwdInput');
+    const icon  = document.getElementById('eyeIcon');
+    input.type  = input.type === 'password' ? 'text' : 'password';
+    icon.className = input.type === 'password' ? 'fa-regular fa-eye' : 'fa-regular fa-eye-slash';
+}
+</script>
+{% endblock %}
