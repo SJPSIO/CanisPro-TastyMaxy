@@ -16,8 +16,18 @@ class Seance
     #[ORM\Column]
     private ?\DateTime $dateHeure = null;
 
-    #[ORM\ManyToOne(inversedBy: 'seances')]
+    #[ORM\Column(length: 255)]
+    private ?string $lieu = null;
+
+    #[ORM\Column]
+    private ?int $nbPlacesMax = null;
+
+    #[ORM\ManyToOne(inversedBy: 'seances', targetEntity: Cours::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Cours $cours = null;
+
+    #[ORM\OneToMany(mappedBy: 'seance', targetEntity: Inscription::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    private Collection $inscriptions;
 
     public function getId(): ?int
     {

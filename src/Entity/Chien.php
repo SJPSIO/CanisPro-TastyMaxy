@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ChienRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,6 +28,14 @@ class Chien
     #[ORM\ManyToOne(inversedBy: 'chiens')]
     private ?Proprietaire $proprietaire = null;
 
+    #[ORM\OneToMany(mappedBy: 'chien', targetEntity: Inscription::class, orphanRemoval: true)]
+    private Collection $inscriptions;
+
+    public function __construct()
+    {
+        $this->inscriptions = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -39,7 +49,6 @@ class Chien
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -51,7 +60,6 @@ class Chien
     public function setRace(string $race): static
     {
         $this->race = $race;
-
         return $this;
     }
 
@@ -63,7 +71,6 @@ class Chien
     public function setDateNaissance(?\DateTime $dateNaissance): static
     {
         $this->dateNaissance = $dateNaissance;
-
         return $this;
     }
 
@@ -75,7 +82,11 @@ class Chien
     public function setProprietaire(?Proprietaire $proprietaire): static
     {
         $this->proprietaire = $proprietaire;
-
         return $this;
+    }
+
+    public function getInscriptions(): Collection
+    {
+        return $this->inscriptions;
     }
 }
