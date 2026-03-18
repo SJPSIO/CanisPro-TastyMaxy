@@ -33,8 +33,14 @@
                     </div>
                 </td>
                 <td>{{ c.race }}</td>
-                <td>{{ c.proprietaire }}</td>
-                <td>{{ c.dateNaissance|date('d/m/Y') }}</td>
+                <td>
+                    {% if c.proprietaire %}
+                        {{ c.proprietaire.prenom }} {{ c.proprietaire.nom }}
+                    {% else %}
+                        <span class="text-muted">Aucun</span>
+                    {% endif %}
+                </td>
+                <td>{{ c.dateNaissance ? c.dateNaissance|date('d/m/Y') : 'N/A' }}</td>
                 <td><span class="badge bg-secondary">{{ c.nb_inscriptions ?? 0 }}</span></td>
                 <td>
                     <form method="POST" action="{{ path('admin_chien_supprimer', {id: c.id}) }}"

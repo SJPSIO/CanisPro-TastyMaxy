@@ -23,11 +23,11 @@ final class AdminController extends AbstractController
     private function getStatsFactices(): array
     {
         return [
-            'nb_utilisateurs'  => 24,
-            'nb_chiens'        => 31,
-            'nb_cours'         => 6,
-            'nb_seances'       => 18,
-            'nb_inscriptions'  => 47,
+            'nb_utilisateurs'  => 0,
+            'nb_chiens'        => 0,
+            'nb_cours'         => 0,
+            'nb_seances'       => 0,
+            'nb_inscriptions'  => 0,
         ];
     }
 
