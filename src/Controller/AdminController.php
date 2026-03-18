@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\CoursRepository;
 use App\Repository\ChienRepository;
 use App\Repository\UtilisateurRepository;
 use App\Repository\ProprietaireRepository;
@@ -75,19 +76,12 @@ final class AdminController extends AbstractController
     // ---- Cours ----
 
     #[Route('/cours', name: 'app_admin_cours')]
-    public function cours(): Response
+    public function cours(CoursRepository $coursRepository): Response
     {
-        $cours = [
-            ['id' => 1, 'titre' => 'Éducation individuelle', 'type' => 'Individuel', 'niveau' => 'Tous niveaux', 'prix' => 65.00, 'nb_seances' => 4],
-            ['id' => 2, 'titre' => 'Cours chiot',            'type' => 'Collectif',  'niveau' => 'Chiot',       'prix' => 40.00, 'nb_seances' => 3],
-            ['id' => 3, 'titre' => 'Obéissance débutant',    'type' => 'Collectif',  'niveau' => 'Débutant',    'prix' => 35.00, 'nb_seances' => 5],
-            ['id' => 4, 'titre' => 'Obéissance confirmé',    'type' => 'Collectif',  'niveau' => 'Confirmé',    'prix' => 38.00, 'nb_seances' => 3],
-            ['id' => 5, 'titre' => 'Agility débutant',       'type' => 'Collectif',  'niveau' => 'Débutant',    'prix' => 42.00, 'nb_seances' => 2],
-            ['id' => 6, 'titre' => 'Sociabilisation',        'type' => 'Collectif',  'niveau' => 'Chiot',       'prix' => 32.00, 'nb_seances' => 1],
-        ];
+        $cours = $coursRepository->findAll();
 
         return $this->render('admin/cours/index.html.twig', [
-            'cours' => $cours,
+            'cours' => $cours
         ]);
     }
 

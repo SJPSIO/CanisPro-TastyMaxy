@@ -44,7 +44,7 @@
                     </span>
                 </td>
                 <td><strong style="color:var(--orange)">{{ c.prix|number_format(2, ',', ' ') }} €</strong></td>
-                <td><span class="badge bg-secondary">{{ c.nb_seances }}</span></td>
+                <td><span class="badge bg-secondary">{{ c|length }}</span></td>
                 <td>
                     <div class="d-flex gap-2">
                         <a href="{{ path('app_cours_show', {id: c.id}) }}" class="btn-action btn-action-view" title="Voir le cours">
