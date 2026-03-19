@@ -186,6 +186,21 @@ final class AdminController extends AbstractController
 
     // ---- Inscriptions ----
 
+    #[Route('/inscription/supprimer/{id}', name: 'admin_inscription_supprimer', methods: ['POST'])]
+    public function supprimerInscription(\App\Entity\Inscription $inscription, Request $request, EntityManagerInterface $entityManager): Response 
+    {
+        // Vérification de sécurité (Token CSRF)
+        if ($this->isCsrfTokenValid('delete' . $inscription->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($inscription);
+            $entityManager->flush();
+            $this->addFlash('success', 'L\'inscription a été annulée avec succès.');
+        } else {
+            $this->addFlash('error', 'Erreur de sécurité : Token CSRF invalide.');
+        }
+
+        return $this->redirectToRoute('app_admin_inscriptions');
+    }
+
     #[Route('/inscriptions', name: 'app_admin_inscriptions')]
     public function inscriptions(InscriptionRepository $inscriptionRepository): Response
     {
@@ -196,6 +211,8 @@ final class AdminController extends AbstractController
             'inscriptions' => $inscriptions,
         ]);
     }
+
+
 
     // ---- Propriétaires ----
 

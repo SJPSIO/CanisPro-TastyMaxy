@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
+use App\Repository\SeanceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use App\Repository\SeanceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SeanceRepository::class)]
@@ -31,6 +31,11 @@ class Seance
     #[ORM\OneToMany(mappedBy: 'seance', targetEntity: Inscription::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $inscriptions;
 
+    public function __construct()
+    {
+        $this->inscriptions = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,19 +49,6 @@ class Seance
     public function setDateHeure(\DateTime $dateHeure): static
     {
         $this->dateHeure = $dateHeure;
-
-        return $this;
-    }
-
-    public function getCours(): ?Cours
-    {
-        return $this->cours;
-    }
-
-    public function setCours(?Cours $cours): static
-    {
-        $this->cours = $cours;
-
         return $this;
     }
 
@@ -82,19 +74,34 @@ class Seance
         return $this;
     }
 
-    /**
-     * @return Collection<int, Inscription>
-     */
+    public function getCours(): ?Cours
+    {
+        return $this->cours;
+    }
+
+    public function setCours(?Cours $cours): static
+    {
+        $this->cours = $cours;
+        return $this;
+    }
+
     public function getInscriptions(): Collection
     {
         return $this->inscriptions;
     }
-    
-    // N'oublie pas d'ajouter le constructeur s'il manque 
-    // pour initialiser la collection d'inscriptions
-    public function __construct()
+
+    public function getNbInscriptions(): int
     {
-        $this->inscriptions = new ArrayCollection();
+        return $this->inscriptions->count();
     }
 
+    public function getPlacesRestantes(): int
+    {
+        return max(0, $this->getNbPlacesMax() - $this->getNbInscriptions());
+    }
+
+    public function estComplete(): bool
+    {
+        return $this->getPlacesRestantes() <= 0;
+    }
 }

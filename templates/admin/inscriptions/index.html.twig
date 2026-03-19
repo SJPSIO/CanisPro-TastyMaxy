@@ -40,7 +40,7 @@
                 <td>{{ i.seance.dateHeure|date('d/m/Y') }} à {{ i.seance.dateHeure|date('H:i') }}</td>
                 
                 {# Date de création de l'entité Inscription #}
-                <td class="text-muted" style="font-size:.82rem">{{ i.createdAt|date('d/m/Y') }}</td>
+                <td class="text-muted" style="font-size:.82rem">{{ i.dateInscription|date('d/m/Y') }}</td>
                 
                 <td>
                     {# Formulaire de suppression sécurisé par CSRF #}
