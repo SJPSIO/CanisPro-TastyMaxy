@@ -8,10 +8,10 @@
         <div class="px-4 py-3 mb-2 d-flex align-items-center gap-2">
             <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
                  style="width:42px;height:42px;background:var(--orange);font-family:'Montserrat',sans-serif;font-weight:700;color:#fff;font-size:1rem">
-                M
+                {{ app.user.proprietaire.prenom|first }}{{ app.user.proprietaire.nom|first }}
             </div>
             <div>
-                <div style="color:#fff;font-weight:600;font-size:.9rem">Joachin Phoenix</div>
+                <div style="color:#fff;font-weight:600;font-size:.9rem">{{ app.user.proprietaire.prenom|default('error') }}</div>
                 <div style="color:rgba(255,255,255,.45);font-size:.75rem">Membre</div>
             </div>
         </div>

@@ -20,19 +20,19 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Prénom</label>
-                            <input type="text" class="form-control" value="{{ proprietaire.prenom }}">
+                            <input type="text" class="form-control" value="{{ app.user.proprietaire.prenom|default('error') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Nom</label>
-                            <input type="text" class="form-control" value="{{ proprietaire.nom }}">
+                            <input type="text" class="form-control" value="{{ app.user.proprietaire.nom|default('error') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Téléphone</label>
-                            <input type="tel" class="form-control" value="{{ proprietaire.telephone }}">
+                            <input type="tel" class="form-control" value="{{ app.user.proprietaire.telephone|default('error') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" value="{{ proprietaire.email }}" readonly disabled>
+                            <input type="email" class="form-control" value="{{ app.user.email|default('error') }}" readonly disabled>
                             <div class="form-text">L'email ne peut pas être modifié ici.</div>
                         </div>
                     </div>
@@ -49,13 +49,13 @@
         <div class="card card-canis text-center p-4">
             <div class="mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center"
                  style="width:80px;height:80px;background:var(--orange);font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.8rem;color:#fff">
-                {{ proprietaire.prenom|first }}{{ proprietaire.nom|first }}
+                {{ app.user.proprietaire.prenom|first }}{{ app.user.proprietaire.nom|first }}
             </div>
-            <h5 style="font-family:'Montserrat',sans-serif;font-weight:700">{{ proprietaire.prenom }} {{ proprietaire.nom }}</h5>
+            <h5 style="font-family:'Montserrat',sans-serif;font-weight:700">{{ app.user.proprietaire.prenom }} {{ app.user.proprietaire.nom }}</h5>
             <span class="badge rounded-pill mb-3" style="background:var(--orange-pale);color:var(--orange)">Membre</span>
             <p class="text-muted" style="font-size:.85rem">
-                <i class="fa-solid fa-envelope me-2" style="color:var(--orange)"></i>{{ proprietaire.email }}<br>
-                <i class="fa-solid fa-phone me-2 mt-2 d-inline-block" style="color:var(--orange)"></i>{{ proprietaire.telephone }}
+                <i class="fa-solid fa-envelope me-2" style="color:var(--orange)"></i>{{ app.user.email }}<br>
+                <i class="fa-solid fa-phone me-2 mt-2 d-inline-block" style="color:var(--orange)"></i>{{ app.user.proprietaire.telephone }}
             </p>
         </div>
     </div>

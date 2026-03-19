@@ -4,16 +4,25 @@
 
 {% block membre_body %}
 
-<div class="mb-4">
+{# <div class="mb-4">
     <h2 style="font-family:'Montserrat',sans-serif;font-weight:800">Bonjour, Marie 👋</h2>
     <p class="text-muted">Bienvenue dans votre espace personnel CanisPro.</p>
+</div> #}
+<div class="mb-4">
+    <h2 style="font-family:'Montserrat',sans-serif;font-weight:800">
+        Bonjour, {{ app.user.proprietaire.prenom|default('Utilisateur') }}
+    </h2>
+    <p class="text-muted">Bienvenue dans votre espace personnel CanisPro.</p>
 </div>
+
 
 {# Stat cards #}
 <div class="row g-3 mb-4">
     <div class="col-sm-6 col-xl-3">
         <div class="stat-card stat-orange">
-            <div class="stat-number">2</div>
+            {# <div class="stat-number">2</div>
+            <div class="stat-label">Mes chiens</div> #}
+            <div class="stat-number">{{ app.user.proprietaire.nbChiens|default(0) }}</div>
             <div class="stat-label">Mes chiens</div>
             <i class="fa-solid fa-dog stat-icon"></i>
         </div>
