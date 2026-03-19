@@ -4,6 +4,20 @@
 
 {% block membre_body %}
 
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+    </div>
+{% endfor %}
+
+{% for message in app.flashes('error') %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+    </div>
+{% endfor %}
+
 <div class="mb-4">
     <h2 style="font-family:'Montserrat',sans-serif;font-weight:800">Mes inscriptions</h2>
     <p class="text-muted">Toutes vos inscriptions aux séances</p>
@@ -34,18 +48,30 @@
         <tbody>
             {% for inscription in inscriptions %}
             <tr>
-                <td><strong>{{ inscription.cours }}</strong></td>
-                <td><span class="badge" style="background:var(--orange-pale);color:var(--orange)"> {{ inscription.chien }}</span></td>
+                <td><strong>{{ inscription.seance.cours.titre }}</strong></td>
+                <td>
+                    <span class="badge" style="background:var(--orange-pale);color:var(--orange)">
+                        {{ inscription.chien.nom }}
+                    </span>
+                </td>
                 <td>
                     <i class="fa-regular fa-calendar me-1 text-muted"></i>
-                    {{ inscription.date_seance|date('d/m/Y') }} à {{ inscription.heure }}
+                    {{ inscription.seance.dateHeure|date('d/m/Y') }} à {{ inscription.seance.dateHeure|date('H:i') }}
                 </td>
-                <td><i class="fa-solid fa-location-dot me-1 text-muted"></i>{{ inscription.lieu }}</td>
-                <td class="text-muted" style="font-size:.85rem">{{ inscription.date_inscription|date('d/m/Y') }}</td>
                 <td>
-                    <button class="btn btn-sm btn-outline-danger">
-                        <i class="fa-solid fa-trash me-1"></i>Annuler
-                    </button>
+                    <i class="fa-solid fa-location-dot me-1 text-muted"></i>{{ inscription.seance.lieu }}
+                </td>
+                <td class="text-muted" style="font-size:.85rem">
+                    {{ inscription.dateInscription|date('d/m/Y') }}
+                </td>
+                <td>
+                    <form method="post"
+                        action="{{ path('app_membre_inscription_delete', {id: inscription.id}) }}"
+                        onsubmit="return confirm('Voulez-vous vraiment annuler cette inscription ?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="fa-solid fa-trash me-1"></i>Annuler
+                        </button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}

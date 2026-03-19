@@ -3,15 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Chien;
+use App\Entity\Inscription;
 use App\Form\ChienType;
 use App\Repository\ChienRepository;
+use App\Repository\InscriptionRepository;
 use App\Repository\ProprietaireRepository;
+use App\Repository\SeanceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+
 
 #[Route('/membre')]
 final class MembreController extends AbstractController
@@ -40,7 +44,9 @@ final class MembreController extends AbstractController
     #[Route('/chiens', name: 'app_membre_chiens')]
     public function chiens(ChienRepository $chienRepository): Response
     {
-        $chiens = $chienRepository->findAll();
+        $user = $this->getUser();
+        $proprietaire = $user->getProprietaire();
+        $chiens = $chienRepository->findBy(['proprietaire' => $proprietaire]);
 
         return $this->render('membre/chiens/index.html.twig', [
             'chiens' => $chiens,
@@ -53,29 +59,29 @@ final class MembreController extends AbstractController
         EntityManagerInterface $entityManager,
         ProprietaireRepository $proprietaireRepository
     ): Response {
-
         $chien = new Chien();
 
         $form = $this->createForm(ChienType::class, $chien);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $proprietaires = $proprietaireRepository->findAll();
 
-        $proprietaires = $proprietaireRepository->findAll();
+            if (empty($proprietaires)) {
+                throw $this->createNotFoundException('Aucun propriétaire en base.');
+            }
 
-        if (empty($proprietaires)) {
-            throw $this->createNotFoundException('Aucun propriétaire en base.');
+            $user = $this->getUser();
+            $proprietaire = $user->getProprietaire();
+            $chien->setProprietaire($proprietaire);
+
+            $chien->setProprietaire($proprietaire);
+
+            $entityManager->persist($chien);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_membre_chiens');
         }
-
-        $proprietaire = $proprietaires[0];
-
-        $chien->setProprietaire($proprietaire);
-
-        $entityManager->persist($chien);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('app_membre_chiens');
-    }
 
         return $this->render('membre/chiens/new.html.twig', [
             'form' => $form->createView(),
@@ -89,7 +95,6 @@ final class MembreController extends AbstractController
         EntityManagerInterface $entityManager,
         ChienRepository $chienRepository
     ): Response {
-
         $chien = $chienRepository->find($id);
 
         if (!$chien) {
@@ -100,7 +105,6 @@ final class MembreController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $entityManager->flush();
 
             return $this->redirectToRoute('app_membre_chiens');
@@ -108,7 +112,7 @@ final class MembreController extends AbstractController
 
         return $this->render('membre/chiens/edit.html.twig', [
             'form' => $form->createView(),
-            'chien' => $chien
+            'chien' => $chien,
         ]);
     }
 
@@ -138,19 +142,12 @@ final class MembreController extends AbstractController
     }
 
     #[Route('/seances', name: 'app_membre_seances')]
-    public function seances(): Response
-    {
-        $seances = [
-            ['id' => 1, 'cours' => 'Obéissance débutant', 'type' => 'Collectif', 'date' => '2025-04-05', 'heure' => '10:00', 'lieu' => 'Terrain principal', 'places' => 8, 'max' => 15],
-            ['id' => 2, 'cours' => 'Cours chiot', 'type' => 'Collectif', 'date' => '2025-04-07', 'heure' => '14:00', 'lieu' => 'Terrain A', 'places' => 3, 'max' => 15],
-            ['id' => 3, 'cours' => 'Agility débutant', 'type' => 'Collectif', 'date' => '2025-04-12', 'heure' => '09:00', 'lieu' => 'Terrain agility', 'places' => 12, 'max' => 15],
-            ['id' => 4, 'cours' => 'Éducation individuelle', 'type' => 'Individuel', 'date' => '2025-04-10', 'heure' => '11:00', 'lieu' => 'Terrain principal', 'places' => 1, 'max' => 1],
-        ];
-
-        $chiens = [
-            ['id' => 1, 'nom' => 'Rocky'],
-            ['id' => 2, 'nom' => 'Luna'],
-        ];
+    public function seances(
+        SeanceRepository $seanceRepository,
+        ChienRepository $chienRepository
+    ): Response {
+        $seances = $seanceRepository->findAll();
+        $chiens = $chienRepository->findAll();
 
         return $this->render('membre/seances.html.twig', [
             'seances' => $seances,
@@ -158,16 +155,92 @@ final class MembreController extends AbstractController
         ]);
     }
 
+    #[Route('/seances/{id}/inscrire', name: 'app_membre_seance_inscrire', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function inscrireChien(
+        int $id,
+        Request $request,
+        SeanceRepository $seanceRepository,
+        ChienRepository $chienRepository,
+        InscriptionRepository $inscriptionRepository,
+        EntityManagerInterface $entityManager
+    ): RedirectResponse {
+        $seance = $seanceRepository->find($id);
+
+        if (!$seance) {
+            throw $this->createNotFoundException('Séance introuvable');
+        }
+
+        $chienId = $request->request->get('chien_id');
+
+        if (!$chienId) {
+            $this->addFlash('error', 'Veuillez choisir un chien.');
+            return $this->redirectToRoute('app_membre_seances');
+        }
+
+        $chien = $chienRepository->find($chienId);
+
+        if (!$chien) {
+            $this->addFlash('error', 'Chien introuvable.');
+            return $this->redirectToRoute('app_membre_seances');
+        }
+
+        if ($seance->estComplete()) {
+            $this->addFlash('error', 'Cette séance est complète.');
+            return $this->redirectToRoute('app_membre_seances');
+        }
+
+        $inscriptionsExistantes = $inscriptionRepository->findAll();
+
+        foreach ($inscriptionsExistantes as $inscriptionExistante) {
+            if (
+                $inscriptionExistante->getChien()?->getId() === $chien->getId()
+                && $inscriptionExistante->getSeance()?->getId() === $seance->getId()
+            ) {
+                $this->addFlash('error', 'Ce chien est déjà inscrit à cette séance.');
+                return $this->redirectToRoute('app_membre_seances');
+            }
+        }
+
+        $inscription = new Inscription();
+        $inscription->setChien($chien);
+        $inscription->setSeance($seance);
+        $inscription->setDateInscription(new \DateTime());
+
+        $entityManager->persist($inscription);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Le chien a bien été inscrit à la séance.');
+
+        return $this->redirectToRoute('app_membre_inscriptions');
+    }
+
     #[Route('/inscriptions', name: 'app_membre_inscriptions')]
-    public function inscriptions(): Response
+    public function inscriptions(InscriptionRepository $inscriptionRepository): Response
     {
-        $inscriptions = [
-            ['id' => 1, 'cours' => 'Obéissance débutant', 'chien' => 'Rocky', 'date_seance' => '2025-04-05', 'heure' => '10:00', 'lieu' => 'Terrain principal', 'date_inscription' => '2025-03-10'],
-            ['id' => 2, 'cours' => 'Cours chiot', 'chien' => 'Luna', 'date_seance' => '2025-04-07', 'heure' => '14:00', 'lieu' => 'Terrain A', 'date_inscription' => '2025-03-12'],
-        ];
+        $inscriptions = $inscriptionRepository->findAll();
 
         return $this->render('membre/inscriptions.html.twig', [
             'inscriptions' => $inscriptions,
         ]);
+    }
+
+    #[Route('/inscriptions/{id}/supprimer', name: 'app_membre_inscription_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function supprimerInscription(
+        int $id,
+        InscriptionRepository $inscriptionRepository,
+        EntityManagerInterface $entityManager
+    ): RedirectResponse {
+        $inscription = $inscriptionRepository->find($id);
+
+        if (!$inscription) {
+            throw $this->createNotFoundException('Inscription introuvable');
+        }
+
+        $entityManager->remove($inscription);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'L’inscription a bien été annulée.');
+
+        return $this->redirectToRoute('app_membre_inscriptions');
     }
 }
