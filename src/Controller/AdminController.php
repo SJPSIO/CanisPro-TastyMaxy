@@ -163,6 +163,27 @@ final class AdminController extends AbstractController
         return $this->redirectToRoute('app_admin_seances');
     }
 
+    #[Route('/seances/{id}/edit', name: 'app_admin_seance_edit', methods: ['GET', 'POST'])]
+    public function seanceEdit(Seance $seance, Request $request, EntityManagerInterface $entityManager, CoursRepository $coursRepository): Response
+    {
+        if ($request->isMethod('POST')) {
+            $dateString = $request->request->get('date') . ' ' . $request->request->get('heure');
+            $seance->setDateHeure(new \DateTime($dateString));
+            $seance->setLieu($request->request->get('lieu'));
+            $seance->setNbPlacesMax((int)$request->request->get('nb_places_max'));
+            $seance->setCours($coursRepository->find($request->request->get('cours_id')));
+
+            $entityManager->flush();
+            $this->addFlash('success', 'Séance mise à jour.');
+            return $this->redirectToRoute('app_admin_seances');
+        }
+
+        return $this->render('admin/seances/edit.html.twig', [
+            'seance' => $seance,
+            'cours' => $coursRepository->findAll(),
+        ]);
+    }
+
     // ---- Inscriptions ----
 
     #[Route('/inscriptions', name: 'app_admin_inscriptions')]
