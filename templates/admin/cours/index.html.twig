@@ -53,9 +53,12 @@
                         <a href="{{ path('app_admin_cours_edit', {id: c.id}) }}" class="btn-action btn-action-edit" title="Modifier">
                             <i class="fa-solid fa-pen"></i>
                         </a>
-                        <button type="button" class="btn-action btn-action-delete" title="Supprimer">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
+                        <form method="post" action="{{ path('admin_cours_supprimer', {'id': c.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?');" style="display:inline-block">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ c.id) }}">
+                            <button type="submit" class="btn-action btn-action-delete" title="Supprimer" style="border: none; background: none; padding: 0;">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
                     </div>
                 </td>
             </tr>

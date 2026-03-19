@@ -135,4 +135,9 @@ class Cours
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->titre; // Ou $this->nom selon ton entité
+    }
 }

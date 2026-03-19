@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use App\Repository\SeanceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -57,4 +59,42 @@ class Seance
 
         return $this;
     }
+
+    public function getLieu(): ?string
+    {
+        return $this->lieu;
+    }
+
+    public function setLieu(string $lieu): static
+    {
+        $this->lieu = $lieu;
+        return $this;
+    }
+
+    public function getNbPlacesMax(): ?int
+    {
+        return $this->nbPlacesMax;
+    }
+
+    public function setNbPlacesMax(int $nbPlacesMax): static
+    {
+        $this->nbPlacesMax = $nbPlacesMax;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Inscription>
+     */
+    public function getInscriptions(): Collection
+    {
+        return $this->inscriptions;
+    }
+    
+    // N'oublie pas d'ajouter le constructeur s'il manque 
+    // pour initialiser la collection d'inscriptions
+    public function __construct()
+    {
+        $this->inscriptions = new ArrayCollection();
+    }
+
 }

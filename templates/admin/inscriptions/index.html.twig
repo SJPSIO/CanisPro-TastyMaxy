@@ -26,16 +26,35 @@
             {% for i in inscriptions %}
             <tr>
                 <td class="text-muted" style="font-size:.85rem">{{ i.id }}</td>
-                <td><span class="badge" style="background:var(--orange-pale);color:var(--orange)"> {{ i.chien }}</span></td>
-                <td>{{ i.proprietaire }}</td>
-                <td><strong>{{ i.cours }}</strong></td>
-                <td>{{ i.date_seance|date('d/m/Y') }} à {{ i.heure }}</td>
-                <td class="text-muted" style="font-size:.82rem">{{ i.date_inscription|date('d/m/Y') }}</td>
+                
+                {# On accède au nom du chien via l'objet Chien #}
+                <td><span class="badge" style="background:var(--orange-pale);color:var(--orange)"> {{ i.chien.nom }}</span></td>
+                
+                {# On remonte du chien vers le propriétaire #}
+                <td>{{ i.chien.proprietaire.nom }} {{ i.chien.proprietaire.prenom }}</td>
+                
+                {# On passe par la séance pour avoir le titre du cours #}
+                <td><strong>{{ i.seance.cours.titre }}</strong></td>
+                
+                {# Formatage de la date et heure de la séance #}
+                <td>{{ i.seance.dateHeure|date('d/m/Y') }} à {{ i.seance.dateHeure|date('H:i') }}</td>
+                
+                {# Date de création de l'entité Inscription #}
+                <td class="text-muted" style="font-size:.82rem">{{ i.createdAt|date('d/m/Y') }}</td>
+                
                 <td>
-                    <button type="button" class="btn-action btn-action-delete" title="Supprimer">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
+                    {# Formulaire de suppression sécurisé par CSRF #}
+                    <form method="post" action="{{ path('admin_inscription_supprimer', {'id': i.id}) }}" onsubmit="return confirm('Supprimer cette inscription ?');" style="display:inline-block">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ i.id) }}">
+                        <button type="submit" class="btn-action btn-action-delete" title="Supprimer">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
                 </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="text-center">Aucune inscription trouvée.</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -15,10 +15,12 @@
     <div class="col-lg-7">
         <div class="card card-canis">
             <div class="card-body p-4">
-                <form class="form-canis">
+                {# Ajout de la méthode POST #}
+                <form class="form-canis" method="POST">
                     <div class="mb-3">
                         <label class="form-label"><i class="fa-solid fa-graduation-cap me-2" style="color:var(--orange)"></i>Cours associé</label>
-                        <select class="form-select">
+                        {# Ajout du name="cours_id" #}
+                        <select class="form-select" name="cours_id" required>
                             <option value="">-- Choisir un cours --</option>
                             {% for c in cours %}
                             <option value="{{ c.id }}">{{ c.titre }}</option>
@@ -28,20 +30,24 @@
                     <div class="row g-3 mb-3">
                         <div class="col-6">
                             <label class="form-label"><i class="fa-regular fa-calendar me-2" style="color:var(--orange)"></i>Date</label>
-                            <input type="date" class="form-control">
+                            {# Ajout du name="date" #}
+                            <input type="date" class="form-control" name="date" required>
                         </div>
                         <div class="col-6">
                             <label class="form-label"><i class="fa-regular fa-clock me-2" style="color:var(--orange)"></i>Heure</label>
-                            <input type="time" class="form-control">
+                            {# Ajout du name="heure" #}
+                            <input type="time" class="form-control" name="heure" required>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label"><i class="fa-solid fa-location-dot me-2" style="color:var(--orange)"></i>Lieu</label>
-                        <input type="text" class="form-control" placeholder="ex : Terrain principal">
+                        {# Ajout du name="lieu" #}
+                        <input type="text" class="form-control" name="lieu" placeholder="ex : Terrain principal" required>
                     </div>
                     <div class="mb-4">
                         <label class="form-label"><i class="fa-solid fa-users me-2" style="color:var(--orange)"></i>Nombre de places max</label>
-                        <input type="number" class="form-control" value="15" min="1" max="15">
+                        {# Ajout du name="nb_places_max" #}
+                        <input type="number" class="form-control" name="nb_places_max" value="15" min="1" max="15" required>
                         <div class="form-text">Maximum 15 places pour un cours collectif, 1 pour un individuel.</div>
                     </div>
                     <div class="d-flex gap-2">
