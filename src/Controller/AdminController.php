@@ -2,21 +2,22 @@
 
 namespace App\Controller;
 
+use App\Entity\Seance;
+use App\Entity\Cours;
+use App\Entity\Utilisateur;
+use App\Entity\Proprietaire;
+use App\Entity\Chien;
+use App\Repository\InscriptionRepository;
+use App\Repository\SeanceRepository;
 use App\Repository\CoursRepository;
 use App\Repository\ChienRepository;
 use App\Repository\UtilisateurRepository;
 use App\Repository\ProprietaireRepository;
-
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
-use App\Entity\Utilisateur;
-use App\Entity\Proprietaire;
-use App\Entity\Chien;
-
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/admin')]
 final class AdminController extends AbstractController
@@ -45,22 +46,15 @@ final class AdminController extends AbstractController
     #[Route('/utilisateurs', name: 'app_admin_utilisateurs')]
     public function utilisateurs(UtilisateurRepository $utilisateurRepository): Response
     {
-        // Récupération de tous les utilisateurs depuis la BDD
         $utilisateurs = $utilisateurRepository->findAll();
-
         return $this->render('admin/utilisateurs/index.html.twig', [
             'utilisateurs' => $utilisateurs,
         ]);
     }
 
-    // Suppression (calqué sur le tp2)
-    #[Route('/admin/utilisateur/supprimer/{id}', name: 'admin_utilisateur_supprimer', methods: ['POST'])]
-    public function supprimerUtilisateur(
-        Utilisateur $utilisateur,
-        Request $request,
-        EntityManagerInterface $entityManager
-    ): Response {
-
+    #[Route('/utilisateur/supprimer/{id}', name: 'admin_utilisateur_supprimer', methods: ['POST'])]
+    public function supprimerUtilisateur(Utilisateur $utilisateur, Request $request, EntityManagerInterface $entityManager): Response 
+    {
         if ($this->isCsrfTokenValid('delete' . $utilisateur->getId(), $request->request->get('_token'))) {
             $entityManager->remove($utilisateur);
             $entityManager->flush();
@@ -68,105 +62,114 @@ final class AdminController extends AbstractController
         } else {
             $this->addFlash('error', 'Token CSRF invalide.');
         }
-
         return $this->redirectToRoute('app_admin_utilisateurs');
     }
-    
 
     // ---- Cours ----
 
     #[Route('/cours', name: 'app_admin_cours')]
     public function cours(CoursRepository $coursRepository): Response
     {
-        $cours = $coursRepository->findAll();
-
         return $this->render('admin/cours/index.html.twig', [
-            'cours' => $cours
+            'cours' => $coursRepository->findAll()
         ]);
     }
 
-    #[Route('/cours/nouveau', name: 'app_admin_cours_new')]
-    public function coursNew(): Response
+    #[Route('/cours/nouveau', name: 'app_admin_cours_new', methods: ['GET', 'POST'])]
+    public function coursNew(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $cours = new Cours();
+        if ($request->isMethod('POST')) {
+            $cours->setTitre($request->request->get('titre'));
+            $cours->setType($request->request->get('type'));
+            $cours->setNiveau($request->request->get('niveau'));
+            $cours->setDescription($request->request->get('description'));
+            $cours->setPrix((float)$request->request->get('prix'));
+
+            $entityManager->persist($cours);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Nouveau cours créé avec succès !');
+            return $this->redirectToRoute('app_admin_cours');
+        }
         return $this->render('admin/cours/new.html.twig');
     }
 
-    #[Route('/cours/{id}/edit', name: 'app_admin_cours_edit', requirements: ['id' => '\d+'])]
-    public function coursEdit(int $id): Response
+    #[Route('/cours/{id}/edit', name: 'app_admin_cours_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    public function coursEdit(Cours $cours, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $cours = ['id' => $id, 'titre' => 'Obéissance débutant', 'type' => 'Collectif', 'niveau' => 'Débutant', 'description' => 'Description du cours...', 'prix' => 35.00];
+        if ($request->isMethod('POST')) {
+            $cours->setTitre($request->request->get('titre'));
+            $cours->setType($request->request->get('type'));
+            $cours->setNiveau($request->request->get('niveau'));
+            $cours->setDescription($request->request->get('description'));
+            $cours->setPrix((float)$request->request->get('prix'));
 
-        return $this->render('admin/cours/edit.html.twig', [
-            'cours' => $cours,
-        ]);
+            $entityManager->flush();
+            $this->addFlash('success', 'Le cours a été mis à jour.');
+            return $this->redirectToRoute('app_admin_cours');
+        }
+        return $this->render('admin/cours/edit.html.twig', ['cours' => $cours]);
+    }
+
+    #[Route('/cours/supprimer/{id}', name: 'admin_cours_supprimer', methods: ['POST'])]
+    public function supprimerCours(Cours $cours, Request $request, EntityManagerInterface $entityManager): Response 
+    {
+        if ($this->isCsrfTokenValid('delete' . $cours->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($cours);
+            $entityManager->flush();
+            $this->addFlash('success', 'Cours supprimé avec succès.');
+        }
+        return $this->redirectToRoute('app_admin_cours');
     }
 
     // ---- Séances ----
 
     #[Route('/seances', name: 'app_admin_seances')]
-    public function seances(): Response
+    public function seances(SeanceRepository $seanceRepository): Response
     {
-        $seances = [
-            ['id' => 1, 'cours' => 'Obéissance débutant', 'date' => '2025-04-05', 'heure' => '10:00', 'lieu' => 'Terrain principal', 'nb_inscriptions' => 7,  'max' => 15],
-            ['id' => 2, 'cours' => 'Cours chiot',          'date' => '2025-04-07', 'heure' => '14:00', 'lieu' => 'Terrain A',         'nb_inscriptions' => 12, 'max' => 15],
-            ['id' => 3, 'cours' => 'Agility débutant',    'date' => '2025-04-12', 'heure' => '09:00', 'lieu' => 'Terrain agility',    'nb_inscriptions' => 3,  'max' => 15],
-            ['id' => 4, 'cours' => 'Éducation individuelle','date'=> '2025-04-10', 'heure' => '11:00', 'lieu' => 'Terrain principal',  'nb_inscriptions' => 1,  'max' => 1],
-            ['id' => 5, 'cours' => 'Sociabilisation',      'date' => '2025-04-15', 'heure' => '15:00', 'lieu' => 'Terrain B',         'nb_inscriptions' => 15, 'max' => 15],
-        ];
-
         return $this->render('admin/seances/index.html.twig', [
-            'seances' => $seances,
+            'seances' => $seanceRepository->findAll(),
         ]);
     }
 
-    #[Route('/seances/nouvelle', name: 'app_admin_seance_new')]
-    public function seanceNew(): Response
+    #[Route('/seances/nouvelle', name: 'app_admin_seance_new', methods: ['GET', 'POST'])]
+    public function seanceNew(Request $request, EntityManagerInterface $entityManager, CoursRepository $coursRepository): Response 
     {
-        $cours = [
-            ['id' => 1, 'titre' => 'Éducation individuelle'],
-            ['id' => 2, 'titre' => 'Cours chiot'],
-            ['id' => 3, 'titre' => 'Obéissance débutant'],
-            ['id' => 4, 'titre' => 'Obéissance confirmé'],
-            ['id' => 5, 'titre' => 'Agility débutant'],
-            ['id' => 6, 'titre' => 'Sociabilisation'],
-        ];
+        $seance = new Seance();
+        if ($request->isMethod('POST')) {
+            $dateString = $request->request->get('date') . ' ' . $request->request->get('heure');
+            $seance->setDateHeure(new \DateTime($dateString));
+            $seance->setLieu($request->request->get('lieu'));
+            $seance->setNbPlacesMax((int)$request->request->get('nb_places_max'));
+            $seance->setCours($coursRepository->find($request->request->get('cours_id')));
 
-        return $this->render('admin/seances/new.html.twig', [
-            'cours' => $cours,
-        ]);
+            $entityManager->persist($seance);
+            $entityManager->flush();
+            $this->addFlash('success', 'Séance créée avec succès.');
+            return $this->redirectToRoute('app_admin_seances');
+        }
+        return $this->render('admin/seances/new.html.twig', ['cours' => $coursRepository->findAll()]);
     }
 
-    #[Route('/seances/{id}/edit', name: 'app_admin_seance_edit', requirements: ['id' => '\d+'])]
-    public function seanceEdit(int $id): Response
+    #[Route('/seances/supprimer/{id}', name: 'admin_seance_supprimer', methods: ['POST'])]
+    public function supprimerSeance(Seance $seance, Request $request, EntityManagerInterface $entityManager): Response 
     {
-        $seance = ['id' => $id, 'cours_id' => 3, 'date' => '2025-04-05', 'heure' => '10:00', 'lieu' => 'Terrain principal', 'nb_places_max' => 15];
-        $cours = [
-            ['id' => 1, 'titre' => 'Éducation individuelle'],
-            ['id' => 2, 'titre' => 'Cours chiot'],
-            ['id' => 3, 'titre' => 'Obéissance débutant'],
-            ['id' => 4, 'titre' => 'Obéissance confirmé'],
-            ['id' => 5, 'titre' => 'Agility débutant'],
-            ['id' => 6, 'titre' => 'Sociabilisation'],
-        ];
-
-        return $this->render('admin/seances/edit.html.twig', [
-            'seance' => $seance,
-            'cours'  => $cours,
-        ]);
+        if ($this->isCsrfTokenValid('delete' . $seance->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($seance);
+            $entityManager->flush();
+            $this->addFlash('success', 'La séance a été supprimée.');
+        }
+        return $this->redirectToRoute('app_admin_seances');
     }
 
     // ---- Inscriptions ----
 
     #[Route('/inscriptions', name: 'app_admin_inscriptions')]
-    public function inscriptions(): Response
+    public function inscriptions(InscriptionRepository $inscriptionRepository): Response
     {
-        $inscriptions = [
-            ['id' => 1, 'chien' => 'Rocky',   'proprietaire' => 'Dubois Marie',  'cours' => 'Obéissance débutant', 'date_seance' => '2025-04-05', 'heure' => '10:00', 'date_inscription' => '2025-03-10'],
-            ['id' => 2, 'chien' => 'Luna',    'proprietaire' => 'Dubois Marie',  'cours' => 'Cours chiot',          'date_seance' => '2025-04-07', 'heure' => '14:00', 'date_inscription' => '2025-03-12'],
-            ['id' => 3, 'chien' => 'Buddy',   'proprietaire' => 'Martin Jean',   'cours' => 'Agility débutant',    'date_seance' => '2025-04-12', 'heure' => '09:00', 'date_inscription' => '2025-03-14'],
-            ['id' => 4, 'chien' => 'Bella',   'proprietaire' => 'Leroy Sophie',  'cours' => 'Sociabilisation',      'date_seance' => '2025-04-15', 'heure' => '15:00', 'date_inscription' => '2025-03-15'],
-            ['id' => 5, 'chien' => 'Max',     'proprietaire' => 'Petit Paul',    'cours' => 'Obéissance débutant', 'date_seance' => '2025-04-05', 'heure' => '10:00', 'date_inscription' => '2025-03-11'],
-        ];
+        // On récupère les vraies données de la BDD
+        $inscriptions = $inscriptionRepository->findAll();
 
         return $this->render('admin/inscriptions/index.html.twig', [
             'inscriptions' => $inscriptions,
@@ -178,30 +181,19 @@ final class AdminController extends AbstractController
     #[Route('/proprietaires', name: 'app_admin_proprietaires')]
     public function proprietaires(ProprietaireRepository $proprietaireRepository): Response
     {
-
-        $proprietaires = $proprietaireRepository->findAll();
-
         return $this->render('admin/proprietaires/index.html.twig', [
-            'proprietaires' => $proprietaires,
+            'proprietaires' => $proprietaireRepository->findAll(),
         ]);
     }
 
-    // Supression (calqué sur le tp2)
-    #[Route('/admin/proprietaire/supprimer/{id}', name: 'admin_proprietaire_supprimer', methods: ['POST'])]
-    public function supprimerProprietaire(
-        Proprietaire $proprietaire,
-        Request $request,
-        EntityManagerInterface $entityManager
-    ): Response {
-
+    #[Route('/proprietaire/supprimer/{id}', name: 'admin_proprietaire_supprimer', methods: ['POST'])]
+    public function supprimerProprietaire(Proprietaire $proprietaire, Request $request, EntityManagerInterface $entityManager): Response 
+    {
         if ($this->isCsrfTokenValid('delete' . $proprietaire->getId(), $request->request->get('_token'))) {
             $entityManager->remove($proprietaire);
             $entityManager->flush();
             $this->addFlash('success', 'Propriétaire supprimé avec succès.');
-        } else {
-            $this->addFlash('error', 'Token CSRF invalide.');
         }
-
         return $this->redirectToRoute('app_admin_proprietaires');
     }
 
@@ -210,29 +202,19 @@ final class AdminController extends AbstractController
     #[Route('/chiens', name: 'app_admin_chiens')]
     public function chiens(ChienRepository $chienRepository): Response
     {
-        $chiens = $chienRepository->findAll();
-
         return $this->render('admin/chiens/index.html.twig', [
-            'chiens' => $chiens,
+            'chiens' => $chienRepository->findAll(),
         ]);
     }
 
-    #[Route('/admin/chien/supprimer/{id}', name: 'admin_chien_supprimer', methods: ['POST'])]
-    public function supprimerChien(
-        Chien $chien,
-        Request $request,
-        EntityManagerInterface $entityManager
-    ): Response {
-
+    #[Route('/chien/supprimer/{id}', name: 'admin_chien_supprimer', methods: ['POST'])]
+    public function supprimerChien(Chien $chien, Request $request, EntityManagerInterface $entityManager): Response 
+    {
         if ($this->isCsrfTokenValid('delete' . $chien->getId(), $request->request->get('_token'))) {
             $entityManager->remove($chien);
             $entityManager->flush();
             $this->addFlash('success', 'Chien supprimé avec succès.');
-        } else {
-            $this->addFlash('error', 'Token CSRF invalide.');
         }
-
         return $this->redirectToRoute('app_admin_chiens');
     }
-
-}
+} // Fin de la classe

@@ -15,37 +15,42 @@
     <div class="col-lg-7">
         <div class="card card-canis">
             <div class="card-body p-4">
-                <form class="form-canis">
+                <form class="form-canis" method="POST"> 
+                    
                     <div class="mb-3">
                         <label class="form-label">Titre du cours</label>
-                        <input type="text" class="form-control" placeholder="ex : Obéissance débutant">
+                        <input type="text" name="titre" class="form-control" placeholder="ex : Obéissance débutant" required>
                     </div>
+
                     <div class="row g-3 mb-3">
                         <div class="col-6">
                             <label class="form-label">Type</label>
-                            <select class="form-select">
-                                <option>Individuel</option>
-                                <option>Collectif</option>
+                            <select name="type" class="form-select">
+                                <option value="Individuel">Individuel</option>
+                                <option value="Collectif">Collectif</option>
                             </select>
                         </div>
                         <div class="col-6">
                             <label class="form-label">Niveau</label>
-                            <select class="form-select">
-                                <option>Chiot</option>
-                                <option>Débutant</option>
-                                <option>Confirmé</option>
-                                <option>Tous niveaux</option>
+                            <select name="niveau" class="form-select">
+                                <option value="Chiot">Chiot</option>
+                                <option value="Débutant">Débutant</option>
+                                <option value="Confirmé">Confirmé</option>
+                                <option value="Tous niveaux">Tous niveaux</option>
                             </select>
                         </div>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">Description</label>
-                        <textarea class="form-control" rows="4" placeholder="Description du cours..."></textarea>
+                        <textarea name="description" class="form-control" rows="4" placeholder="Description du cours..."></textarea>
                     </div>
+
                     <div class="mb-4">
                         <label class="form-label">Prix par séance (€)</label>
-                        <input type="number" class="form-control" step="0.01" placeholder="ex : 35.00">
+                        <input type="number" name="prix" class="form-control" step="0.01" placeholder="ex : 35.00" required>
                     </div>
+
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-canispro">
                             <i class="fa-solid fa-floppy-disk me-2"></i>Créer le cours

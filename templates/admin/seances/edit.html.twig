@@ -15,33 +15,44 @@
     <div class="col-lg-7">
         <div class="card card-canis">
             <div class="card-body p-4">
-                <form class="form-canis">
+                {# Pense à ajouter la méthode POST et l'action si tu ne l'as pas encore fait #}
+                <form class="form-canis" method="POST">
                     <div class="mb-3">
                         <label class="form-label">Cours associé</label>
-                        <select class="form-select">
+                        <select class="form-select" name="cours_id">
                             {% for c in cours %}
-                            <option value="{{ c.id }}" {% if c.id == seance.cours_id %}selected{% endif %}>{{ c.titre }}</option>
+                                {# Correction : on compare c.id avec l'id du cours de la séance #}
+                                <option value="{{ c.id }}" {% if seance.cours and c.id == seance.cours.id %}selected{% endif %}>
+                                    {{ c.titre }}
+                                </option>
                             {% endfor %}
                         </select>
                     </div>
+
                     <div class="row g-3 mb-3">
                         <div class="col-6">
                             <label class="form-label">Date</label>
-                            <input type="date" class="form-control" value="{{ seance.date }}">
+                            {# Correction : dateHeure formaté pour le champ HTML date #}
+                            <input type="date" class="form-control" name="date" value="{{ seance.dateHeure|date('Y-m-d') }}">
                         </div>
                         <div class="col-6">
                             <label class="form-label">Heure</label>
-                            <input type="time" class="form-control" value="{{ seance.heure }}">
+                            {# Correction : dateHeure formaté pour le champ HTML time #}
+                            <input type="time" class="form-control" name="heure" value="{{ seance.dateHeure|date('H:i') }}">
                         </div>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">Lieu</label>
-                        <input type="text" class="form-control" value="{{ seance.lieu }}">
+                        <input type="text" class="form-control" name="lieu" value="{{ seance.lieu }}">
                     </div>
+
                     <div class="mb-4">
                         <label class="form-label">Places max</label>
-                        <input type="number" class="form-control" value="{{ seance.nb_places_max }}">
+                        {# Correction : utilisation du nom exact nbPlacesMax #}
+                        <input type="number" class="form-control" name="nb_places_max" value="{{ seance.nbPlacesMax }}">
                     </div>
+
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-canispro">
                             <i class="fa-solid fa-floppy-disk me-2"></i>Enregistrer

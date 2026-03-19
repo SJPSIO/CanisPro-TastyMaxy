@@ -31,17 +31,24 @@
             {% for s in seances %}
             <tr>
                 <td class="text-muted" style="font-size:.85rem">{{ s.id }}</td>
+                {# Utilise getCours() (et le __toString de Cours) #}
                 <td><strong>{{ s.cours }}</strong></td>
-                <td>{{ s.date|date('d/m/Y') }}</td>
-                <td>{{ s.heure }}</td>
+                {# Utilise getDateHeure() #}
+                <td>{{ s.dateHeure|date('d/m/Y') }}</td>
+                <td>{{ s.dateHeure|date('H:i') }}</td>
+                {# Utilise getLieu() (que tu as ajouté à l'entité) #}
                 <td>{{ s.lieu }}</td>
                 <td>
-                    {% set pct = (s.nb_inscriptions / s.max) * 100 %}
+                    {# Calcul dynamique : compte les éléments dans la collection inscriptions #}
+                    {% set nbInscrits = s.inscriptions|length %}
+                    {% set maxPlaces = s.nbPlacesMax %}
+                    {% set pct = (maxPlaces > 0) ? (nbInscrits / maxPlaces * 100) : 0 %}
+                    
                     <div class="d-flex align-items-center gap-2">
                         <div class="progress flex-fill" style="height:6px;width:80px">
-                            <div class="progress-bar" style="width:{{ pct }}%;background:{% if pct >= 100 %}#dc3545{% elseif pct >= 70 %}#ffc107{% else %}var(--orange){% endif %}"></div>
+                            <div class="progress-bar" style="width:{{ pct }}%;background:{% if pct >= 100 %}#dc3545{% elseif pct >= 70 %}#ffc107{% else %}var(--orange, #f39c12){% endif %}"></div>
                         </div>
-                        <span style="font-size:.82rem;white-space:nowrap">{{ s.nb_inscriptions }}/{{ s.max }}</span>
+                        <span style="font-size:.82rem;white-space:nowrap">{{ nbInscrits }}/{{ maxPlaces }}</span>
                     </div>
                 </td>
                 <td>
@@ -49,11 +56,20 @@
                         <a href="{{ path('app_admin_seance_edit', {id: s.id}) }}" class="btn-action btn-action-edit" title="Modifier">
                             <i class="fa-solid fa-pen"></i>
                         </a>
-                        <button type="button" class="btn-action btn-action-delete" title="Supprimer">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
+                        
+                        {# Formulaire de suppression avec token CSRF (plus sécurisé) #}
+                        <form method="post" action="{{ path('admin_seance_supprimer', {id: s.id}) }}" onsubmit="return confirm('Supprimer cette séance ?');" style="display:inline-block">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ s.id) }}">
+                            <button class="btn-action btn-action-delete" title="Supprimer">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
                     </div>
                 </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="text-center py-4">Aucune séance enregistrée pour le moment.</td>
             </tr>
             {% endfor %}
         </tbody>
