@@ -31,43 +31,46 @@
 {% else %}
 <div class="row g-4">
     {% for seance in seances %}
-        <div class="col-md-6 col-xl-4">
-            <div class="card card-canis h-100">
-                <div style="height:5px;background:{% if seance.placesRestantes == 0 %}#dc3545{% elseif seance.placesRestantes <= 3 %}#ffc107{% else %}var(--orange){% endif %}"></div>
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h5 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;margin:0">
-                            {{ seance.cours.titre }}
-                        </h5>
-                        <span class="badge rounded-pill" style="background:var(--dark);color:#fff;font-size:.72rem">
-                            {{ seance.cours.type }}
-                        </span>
-                    </div>
+    <div class="col-md-6 col-xl-4">
+        <div class="card card-canis h-100">
+            <div style="height:5px;background:{% if seance.placesRestantes == 0 %}#dc3545{% elseif seance.placesRestantes <= 3 %}#ffc107{% else %}var(--orange){% endif %}"></div>
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;margin:0">
+                        {{ seance.cours.titre }}
+                    </h5>
+                    <span class="badge rounded-pill" style="background:var(--dark);color:#fff;font-size:.72rem">
+                        {{ seance.cours.type }}
+                    </span>
+                </div>
 
-                    <div class="text-muted mb-3" style="font-size:.88rem">
-                        <div>
-                            <i class="fa-regular fa-calendar me-2"></i>
-                            {{ seance.dateHeure|date('d/m/Y') }} à {{ seance.dateHeure|date('H:i') }}
-                        </div>
-                        <div>
-                            <i class="fa-solid fa-location-dot me-2"></i>{{ seance.lieu }}
-                        </div>
-                        <div class="mt-1">
-                            {% if seance.placesRestantes == 0 %}
-                                <span class="badge bg-danger">Complet</span>
-                            {% elseif seance.placesRestantes <= 3 %}
-                                <span class="badge bg-warning text-dark">
-                                    {{ seance.placesRestantes }} place{% if seance.placesRestantes > 1 %}s{% endif %} restante{% if seance.placesRestantes > 1 %}s{% endif %}
-                                </span>
-                            {% else %}
-                                <span class="badge bg-success">
-                                    {{ seance.placesRestantes }} / {{ seance.nbPlacesMax }} places
-                                </span>
-                            {% endif %}
-                        </div>
+                <div class="text-muted mb-3" style="font-size:.88rem">
+                    <div>
+                        <i class="fa-regular fa-calendar me-2"></i>
+                        {{ seance.dateHeure|date('d/m/Y') }} à {{ seance.dateHeure|date('H:i') }}
                     </div>
+                    <div>
+                        <i class="fa-solid fa-location-dot me-2"></i>{{ seance.lieu }}
+                    </div>
+                    <div class="mt-1">
+                        {% if seance.placesRestantes == 0 %}
+                            <span class="badge bg-danger">Complet</span>
+                        {% elseif seance.placesRestantes <= 3 %}
+                            <span class="badge bg-warning text-dark">
+                                {{ seance.placesRestantes }} place{% if seance.placesRestantes > 1 %}s{% endif %} restante{% if seance.placesRestantes > 1 %}s{% endif %}
+                            </span>
+                        {% else %}
+                            <span class="badge bg-success">
+                                {{ seance.placesRestantes }} / {{ seance.nbPlacesMax }} places
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
 
-                    {% if seance.placesRestantes > 0 %}
+                {% if seance.placesRestantes > 0 %}
+                    {% if chiens is empty %}
+                        <button class="btn btn-secondary btn-sm w-100" disabled>Aucun chien disponible</button>
+                    {% else %}
                         <form method="post" action="{{ path('app_membre_seance_inscrire', {id: seance.id}) }}">
                             <div class="mb-2">
                                 <select name="chien_id" class="form-select form-select-sm" required>
@@ -82,12 +85,13 @@
                                 <i class="fa-solid fa-calendar-plus me-1"></i>S'inscrire
                             </button>
                         </form>
-                    {% else %}
-                        <button class="btn btn-secondary btn-sm w-100" disabled>Séance complète</button>
                     {% endif %}
-                </div>
+                {% else %}
+                    <button class="btn btn-secondary btn-sm w-100" disabled>Séance complète</button>
+                {% endif %}
             </div>
         </div>
+    </div>
     {% endfor %}
 </div>
 {% endif %}
