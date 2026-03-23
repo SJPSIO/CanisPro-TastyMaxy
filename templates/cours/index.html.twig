@@ -4,7 +4,6 @@
 
 {% block body %}
 
-{# ===== EN-TÊTE ===== #}
 <div class="page-header">
     <div class="container">
         <nav aria-label="breadcrumb">
@@ -18,22 +17,20 @@
     </div>
 </div>
 
-{# ===== FILTRES ===== #}
 <section style="background:#fff;border-bottom:1px solid #f0f0f0;padding:20px 0">
     <div class="container">
         <div class="d-flex gap-2 flex-wrap align-items-center">
             <span class="fw-semibold text-muted me-2" style="font-size:.9rem">Filtrer :</span>
-            <button class="btn btn-sm btn-canispro">Tous</button>
-            <button class="btn btn-sm btn-outline-secondary rounded-pill">Individuel</button>
-            <button class="btn btn-sm btn-outline-secondary rounded-pill">Collectif</button>
-            <button class="btn btn-sm btn-outline-secondary rounded-pill">Chiot</button>
-            <button class="btn btn-sm btn-outline-secondary rounded-pill">Débutant</button>
-            <button class="btn btn-sm btn-outline-secondary rounded-pill">Confirmé</button>
+            <button class="btn btn-sm btn-canispro" type="button">Tous</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill" type="button">Individuel</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill" type="button">Collectif</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill" type="button">Chiot</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill" type="button">Débutant</button>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill" type="button">Confirmé</button>
         </div>
     </div>
 </section>
 
-{# ===== LISTE DES COURS ===== #}
 <section class="py-5">
     <div class="container">
         <div class="row g-4">
@@ -43,12 +40,12 @@
                     <div class="card-header-strip"></div>
                     <div class="card-body">
 
-                        {# Type + Niveau #}
                         <div class="d-flex gap-2 mb-3">
                             <span class="badge rounded-pill" style="background:var(--dark);color:#fff;font-size:.73rem">
                                 <i class="fa-solid fa-{% if c.type == 'Individuel' %}user{% else %}users{% endif %} me-1"></i>
                                 {{ c.type }}
                             </span>
+
                             <span class="badge-niveau badge
                                 {% if c.niveau == 'Chiot' %}badge-chiot
                                 {% elseif c.niveau == 'Débutant' %}badge-debutant
@@ -57,28 +54,46 @@
                             </span>
                         </div>
 
-                        {# Icône + Titre #}
                         <div class="d-flex align-items-center gap-3 mb-3">
                             <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
                                  style="width:48px;height:48px;background:var(--orange-pale)">
-                                <i class="fa-solid fa-{{ c.icone }}" style="color:var(--orange)"></i>
+                                <i class="fa-solid
+                                    {% if c.type == 'Individuel' %}fa-user
+                                    {% elseif c.niveau == 'Chiot' %}fa-dog
+                                    {% elseif c.titre matches '/[Aa]gility/' %}fa-person-running
+                                    {% elseif c.titre matches '/[Ss]ociabilisation/' %}fa-heart
+                                    {% elseif c.niveau == 'Confirmé' %}fa-trophy
+                                    {% else %}fa-graduation-cap{% endif %}"
+                                   style="color:var(--orange)"></i>
                             </div>
-                            <h3 class="mb-0" style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:700">{{ c.titre }}</h3>
+
+                            <h3 class="mb-0" style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:700">
+                                {{ c.titre }}
+                            </h3>
                         </div>
 
-                        <p class="text-muted" style="font-size:.9rem;line-height:1.6">{{ c.description }}</p>
+                        <p class="text-muted" style="font-size:.9rem;line-height:1.6">
+                            {{ c.description }}
+                        </p>
 
-                        {# Prix + Bouton #}
                         <div class="d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top:1px solid #f0f0f0">
                             <div>
                                 <div class="cours-prix">{{ c.prix|number_format(2, ',', ' ') }} €<small> / séance</small></div>
                             </div>
+
                             <a href="{{ path('app_cours_show', {id: c.id}) }}" class="btn btn-canispro btn-sm">
                                 Voir les séances <i class="fa-solid fa-arrow-right ms-1"></i>
                             </a>
                         </div>
 
                     </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12">
+                <div class="alert alert-light border text-center py-4">
+                    <i class="fa-solid fa-circle-info fa-2x text-muted mb-2"></i>
+                    <p class="mb-0 text-muted">Aucun cours disponible pour le moment.</p>
                 </div>
             </div>
             {% endfor %}

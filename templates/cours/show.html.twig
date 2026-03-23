@@ -4,7 +4,6 @@
 
 {% block body %}
 
-{# ===== EN-TÊTE ===== #}
 <div class="page-header">
     <div class="container">
         <nav aria-label="breadcrumb">
@@ -14,21 +13,21 @@
                 <li class="breadcrumb-item active text-white">{{ cours.titre }}</li>
             </ol>
         </nav>
+
         <div class="d-flex gap-2 mb-3">
             <span class="badge rounded-pill" style="background:var(--orange);font-size:.75rem">{{ cours.type }}</span>
             <span class="badge rounded-pill" style="background:rgba(255,255,255,.15);font-size:.75rem">{{ cours.niveau }}</span>
         </div>
+
         <h1>{{ cours.titre }}</h1>
         <p>{{ cours.description }}</p>
     </div>
 </div>
 
-{# ===== CONTENU ===== #}
 <section class="py-5">
     <div class="container">
         <div class="row g-4">
 
-            {# Infos cours #}
             <div class="col-lg-4">
                 <div class="card card-canis">
                     <div class="card-body p-4">
@@ -40,14 +39,17 @@
                             <span class="text-muted">Type</span>
                             <strong>{{ cours.type }}</strong>
                         </div>
+
                         <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid #f0f0f0">
                             <span class="text-muted">Niveau</span>
                             <strong>{{ cours.niveau }}</strong>
                         </div>
+
                         <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid #f0f0f0">
                             <span class="text-muted">Tarif</span>
                             <strong style="color:var(--orange)">{{ cours.prix|number_format(2, ',', ' ') }} € / séance</strong>
                         </div>
+
                         {% if cours.type == 'Collectif' %}
                         <div class="d-flex justify-content-between py-2">
                             <span class="text-muted">Places max</span>
@@ -69,7 +71,6 @@
                 </div>
             </div>
 
-            {# Tableau des séances #}
             <div class="col-lg-8">
                 <h4 style="font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:20px">
                     <i class="fa-solid fa-calendar-days me-2" style="color:var(--orange)"></i>Séances à venir
@@ -97,17 +98,25 @@
                             <tr>
                                 <td>
                                     <i class="fa-regular fa-calendar me-2 text-muted"></i>
-                                    {{ seance.date|date('d/m/Y') }}
+                                    {{ seance.dateHeure|date('d/m/Y') }}
                                 </td>
-                                <td><i class="fa-regular fa-clock me-2 text-muted"></i>{{ seance.heure }}</td>
-                                <td><i class="fa-solid fa-location-dot me-2 text-muted"></i>{{ seance.lieu }}</td>
                                 <td>
-                                    {% if seance.places_restantes == 0 %}
+                                    <i class="fa-regular fa-clock me-2 text-muted"></i>
+                                    {{ seance.dateHeure|date('H:i') }}
+                                </td>
+                                <td>
+                                    <i class="fa-solid fa-location-dot me-2 text-muted"></i>
+                                    {{ seance.lieu }}
+                                </td>
+                                <td>
+                                    {% if seance.placesRestantes == 0 %}
                                         <span class="badge bg-danger">Complet</span>
-                                    {% elseif seance.places_restantes <= 3 %}
-                                        <span class="badge bg-warning text-dark">{{ seance.places_restantes }} place{% if seance.places_restantes > 1 %}s{% endif %}</span>
+                                    {% elseif seance.placesRestantes <= 3 %}
+                                        <span class="badge bg-warning text-dark">
+                                            {{ seance.placesRestantes }} place{% if seance.placesRestantes > 1 %}s{% endif %}
+                                        </span>
                                     {% else %}
-                                        <span class="badge bg-success">{{ seance.places_restantes }} places</span>
+                                        <span class="badge bg-success">{{ seance.placesRestantes }} places</span>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -121,8 +130,8 @@
                     </table>
                 </div>
                 {% endif %}
-
             </div>
+
         </div>
     </div>
 </section>

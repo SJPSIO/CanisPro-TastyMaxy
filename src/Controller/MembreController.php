@@ -7,7 +7,6 @@ use App\Entity\Inscription;
 use App\Form\ChienType;
 use App\Repository\ChienRepository;
 use App\Repository\InscriptionRepository;
-use App\Repository\ProprietaireRepository;
 use App\Repository\SeanceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,25 +15,62 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-
 #[Route('/membre')]
 final class MembreController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_membre_dashboard')]
-    public function dashboard(): Response
-    {
-        return $this->render('membre/dashboard.html.twig');
+    public function dashboard(
+        ChienRepository $chienRepository,
+        InscriptionRepository $inscriptionRepository,
+        SeanceRepository $seanceRepository
+    ): Response {
+        $user = $this->getUser();
+        $proprietaire = $user?->getProprietaire();
+
+        if (!$proprietaire) {
+            throw $this->createAccessDeniedException('Aucun propriétaire associé à cet utilisateur.');
+        }
+
+        $chiens = $chienRepository->findBy(['proprietaire' => $proprietaire]);
+
+        $inscriptionsToutes = $inscriptionRepository->findAll();
+        $inscriptionsMembre = [];
+
+        foreach ($inscriptionsToutes as $inscription) {
+            $chien = $inscription->getChien();
+
+            if ($chien && $chien->getProprietaire()?->getId() === $proprietaire->getId()) {
+                $inscriptionsMembre[] = $inscription;
+            }
+        }
+
+        usort($inscriptionsMembre, function ($a, $b) {
+            return $a->getSeance()->getDateHeure() <=> $b->getSeance()->getDateHeure();
+        });
+
+        $prochainesInscriptions = array_slice($inscriptionsMembre, 0, 5);
+        $seancesDisponibles = $seanceRepository->findAll();
+
+        return $this->render('membre/dashboard.html.twig', [
+            'proprietaire' => $proprietaire,
+            'chiens' => $chiens,
+            'nbChiens' => count($chiens),
+            'nbInscriptionsActives' => count($inscriptionsMembre),
+            'nbSeancesDisponibles' => count($seancesDisponibles),
+            'nbSeancesSuivies' => count($inscriptionsMembre),
+            'prochainesInscriptions' => $prochainesInscriptions,
+        ]);
     }
 
     #[Route('/profil', name: 'app_membre_profil')]
     public function profil(): Response
     {
-        $proprietaire = [
-            'nom' => 'Phoenix',
-            'prenom' => 'Joachin',
-            'telephone' => '06 12 34 56 78',
-            'email' => 'Joachin.phoenix@email.fr',
-        ];
+        $user = $this->getUser();
+        $proprietaire = $user?->getProprietaire();
+
+        if (!$proprietaire) {
+            throw $this->createAccessDeniedException('Aucun propriétaire associé à cet utilisateur.');
+        }
 
         return $this->render('membre/profil.html.twig', [
             'proprietaire' => $proprietaire,
@@ -45,7 +81,12 @@ final class MembreController extends AbstractController
     public function chiens(ChienRepository $chienRepository): Response
     {
         $user = $this->getUser();
-        $proprietaire = $user->getProprietaire();
+        $proprietaire = $user?->getProprietaire();
+
+        if (!$proprietaire) {
+            throw $this->createAccessDeniedException('Aucun propriétaire associé à cet utilisateur.');
+        }
+
         $chiens = $chienRepository->findBy(['proprietaire' => $proprietaire]);
 
         return $this->render('membre/chiens/index.html.twig', [
@@ -56,25 +97,21 @@ final class MembreController extends AbstractController
     #[Route('/chiens/nouveau', name: 'app_membre_chien_new')]
     public function chienNew(
         Request $request,
-        EntityManagerInterface $entityManager,
-        ProprietaireRepository $proprietaireRepository
+        EntityManagerInterface $entityManager
     ): Response {
+        $user = $this->getUser();
+        $proprietaire = $user?->getProprietaire();
+
+        if (!$proprietaire) {
+            throw $this->createAccessDeniedException('Aucun propriétaire associé à cet utilisateur.');
+        }
+
         $chien = new Chien();
 
         $form = $this->createForm(ChienType::class, $chien);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $proprietaires = $proprietaireRepository->findAll();
-
-            if (empty($proprietaires)) {
-                throw $this->createNotFoundException('Aucun propriétaire en base.');
-            }
-
-            $user = $this->getUser();
-            $proprietaire = $user->getProprietaire();
-            $chien->setProprietaire($proprietaire);
-
             $chien->setProprietaire($proprietaire);
 
             $entityManager->persist($chien);
@@ -95,10 +132,21 @@ final class MembreController extends AbstractController
         EntityManagerInterface $entityManager,
         ChienRepository $chienRepository
     ): Response {
+        $user = $this->getUser();
+        $proprietaire = $user?->getProprietaire();
+
+        if (!$proprietaire) {
+            throw $this->createAccessDeniedException('Aucun propriétaire associé à cet utilisateur.');
+        }
+
         $chien = $chienRepository->find($id);
 
         if (!$chien) {
             throw $this->createNotFoundException('Chien introuvable');
+        }
+
+        if ($chien->getProprietaire()?->getId() !== $proprietaire->getId()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas modifier ce chien.');
         }
 
         $form = $this->createForm(ChienType::class, $chien);
@@ -122,10 +170,21 @@ final class MembreController extends AbstractController
         ChienRepository $chienRepository,
         EntityManagerInterface $entityManager
     ): RedirectResponse {
+        $user = $this->getUser();
+        $proprietaire = $user?->getProprietaire();
+
+        if (!$proprietaire) {
+            throw $this->createAccessDeniedException('Aucun propriétaire associé à cet utilisateur.');
+        }
+
         $chien = $chienRepository->find($id);
 
         if (!$chien) {
             throw $this->createNotFoundException('Chien introuvable');
+        }
+
+        if ($chien->getProprietaire()?->getId() !== $proprietaire->getId()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas supprimer ce chien.');
         }
 
         if (!$chien->getInscriptions()->isEmpty()) {
@@ -146,8 +205,15 @@ final class MembreController extends AbstractController
         SeanceRepository $seanceRepository,
         ChienRepository $chienRepository
     ): Response {
+        $user = $this->getUser();
+        $proprietaire = $user?->getProprietaire();
+
+        if (!$proprietaire) {
+            throw $this->createAccessDeniedException('Aucun propriétaire associé à cet utilisateur.');
+        }
+
         $seances = $seanceRepository->findAll();
-        $chiens = $chienRepository->findAll();
+        $chiens = $chienRepository->findBy(['proprietaire' => $proprietaire]);
 
         return $this->render('membre/seances.html.twig', [
             'seances' => $seances,
@@ -164,6 +230,13 @@ final class MembreController extends AbstractController
         InscriptionRepository $inscriptionRepository,
         EntityManagerInterface $entityManager
     ): RedirectResponse {
+        $user = $this->getUser();
+        $proprietaire = $user?->getProprietaire();
+
+        if (!$proprietaire) {
+            throw $this->createAccessDeniedException('Aucun propriétaire associé à cet utilisateur.');
+        }
+
         $seance = $seanceRepository->find($id);
 
         if (!$seance) {
@@ -181,6 +254,11 @@ final class MembreController extends AbstractController
 
         if (!$chien) {
             $this->addFlash('error', 'Chien introuvable.');
+            return $this->redirectToRoute('app_membre_seances');
+        }
+
+        if ($chien->getProprietaire()?->getId() !== $proprietaire->getId()) {
+            $this->addFlash('error', 'Vous ne pouvez pas inscrire le chien d’un autre membre.');
             return $this->redirectToRoute('app_membre_seances');
         }
 
@@ -217,7 +295,23 @@ final class MembreController extends AbstractController
     #[Route('/inscriptions', name: 'app_membre_inscriptions')]
     public function inscriptions(InscriptionRepository $inscriptionRepository): Response
     {
-        $inscriptions = $inscriptionRepository->findAll();
+        $user = $this->getUser();
+        $proprietaire = $user?->getProprietaire();
+
+        if (!$proprietaire) {
+            throw $this->createAccessDeniedException('Aucun propriétaire associé à cet utilisateur.');
+        }
+
+        $inscriptionsToutes = $inscriptionRepository->findAll();
+        $inscriptions = [];
+
+        foreach ($inscriptionsToutes as $inscription) {
+            $chien = $inscription->getChien();
+
+            if ($chien && $chien->getProprietaire()?->getId() === $proprietaire->getId()) {
+                $inscriptions[] = $inscription;
+            }
+        }
 
         return $this->render('membre/inscriptions.html.twig', [
             'inscriptions' => $inscriptions,
@@ -230,10 +324,23 @@ final class MembreController extends AbstractController
         InscriptionRepository $inscriptionRepository,
         EntityManagerInterface $entityManager
     ): RedirectResponse {
+        $user = $this->getUser();
+        $proprietaire = $user?->getProprietaire();
+
+        if (!$proprietaire) {
+            throw $this->createAccessDeniedException('Aucun propriétaire associé à cet utilisateur.');
+        }
+
         $inscription = $inscriptionRepository->find($id);
 
         if (!$inscription) {
             throw $this->createNotFoundException('Inscription introuvable');
+        }
+
+        $chien = $inscription->getChien();
+
+        if (!$chien || $chien->getProprietaire()?->getId() !== $proprietaire->getId()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas annuler cette inscription.');
         }
 
         $entityManager->remove($inscription);
